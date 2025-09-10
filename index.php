@@ -15,7 +15,7 @@ if (!$conn) {
 // ------------------- ADD TO CART -------------------
 if (isset($_POST['add_to_cart'])) {
 
-  if($_SESSION['email']!=""){
+  if($_SESSION['user_id']!=""){
 
   
 
@@ -38,8 +38,8 @@ if (isset($_POST['add_to_cart'])) {
                              WHERE product_id = '$id'");
   } else {
     $total = $price * 1;
-    mysqli_query($conn, "INSERT INTO cart (product_id, name, price, image, qty, total) 
-                             VALUES ('$id', '$name', '$price', '$image', 1, '$total')");
+    mysqli_query($conn, "INSERT INTO cart (user_id,product_id, name, price, image, qty, total) 
+                             VALUES ('$_SESSION[user_id]', '$id', '$name', '$price', '$image', 1, '$total')");
   }
 
   header("Location: index.php#openCart");
@@ -89,7 +89,8 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     .p-card {
       background-color: antiquewhite;
       padding: 13px;
-      width: 25%;
+      width: 23%;
+      border-radius: 30px;
     }
 
     .P-container {
@@ -147,6 +148,7 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
         <li> <a class="links" href="#policy">Policy</a> </li>
         <li> <a class="links" href="#contactus">Contact us</a> </li>
+        <li> <a class="links" href="logout.php">Log out</a> </li>
     </div>
   </div>
   </ul>
@@ -161,7 +163,7 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   </nav>
 
 
-  <nav>
+  <nav style="background-color: #121212; height: 70px;">
     <h1>Trendy Wear</h1>
 
     <div class="icons">
@@ -240,7 +242,7 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
   </nav>
   <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel"
-    style="position: absolute; top: 0; width: 100%; z-index: -1; margin-top: 50px;">
+    style="position: absolute; top: 100px; width: 100%; z-index: -1; margin-top: 50px;">
     <?php
     $select = "SELECT * FROM carousel";
     $result = mysqli_query($conn, $select);
@@ -303,11 +305,11 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
 
     while ($fcat = mysqli_fetch_assoc($cat)) {
-      echo "<div class='P-container' id='cart{$fcat['id']}'>";
+      echo "<div class='P-container' style='gap:10px;' id='cart{$fcat['id']}'>";
       $pro = mysqli_query($conn, "SELECT * FROM products WHERE category_id = {$fcat['id']}");
       while ($rows = mysqli_fetch_assoc($pro)) { ?>
         <div class="p-card">
-          <img src="image/<?php echo $rows['image']; ?>" alt="" style="width: 100%; height: auto;">
+          <img src="image/<?php echo $rows['image']; ?>" alt="" style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
           <div class="card-body">
             <h5 class="card-title"><span
                 style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
