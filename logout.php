@@ -6,6 +6,6 @@ session_unset();
 session_destroy();
 
 // ab redirect karo (direct location)
-header("Location: login.php"); 
+header("Location: index.php"); 
 exit();
 ?>
