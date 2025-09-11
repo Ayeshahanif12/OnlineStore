@@ -49,14 +49,20 @@ if (isset($_POST['ordernow'])) {
         $cart_sql = mysqli_query($conn, "SELECT * FROM cart WHERE user_id='$user_id'");
         while ($row = mysqli_fetch_assoc($cart_sql)) {
             $product_id = $row['product_id'];
+            $product_name = $row['name'];   // cart me save h
+            $product_image = $row['image']; // cart me save h
             $qty = $row['qty'];
             $price = $row['price'];
-            $total = $row['total'];
+            $line_total = $row['total']; // per item ka total (price * qty)
 
-            $insert_item = "INSERT INTO order_items (order_id, user_id, product_id, qty, price, total, order_status) 
-                            VALUES ('$order_id', '$user_id', '$product_id', '$qty', '$price', '$total', 'pending')";
+            $insert_item = "INSERT INTO order_items 
+(order_id, user_id, product_id, product_name, product_image, qty, price, total, order_status) 
+VALUES 
+('$order_id', '$user_id', '$product_id', '" . $row['name'] . "', '" . $row['image'] . "', '$qty', '$price', '$total', 'pending')";
+
             mysqli_query($conn, $insert_item);
         }
+
 
         // ✅ Clear cart
         mysqli_query($conn, "DELETE FROM cart WHERE user_id='$user_id'");

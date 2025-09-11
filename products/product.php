@@ -134,7 +134,7 @@ body {
     <ul class="nav nav-pills flex-column mb-auto">
         <li><a href="http://localhost/clothing%20store/adminpanel/adminpage.php" class="nav-link active"><i class="bi bi-house-door-fill me-2"></i> Home</a></li>
         <li><a href="http://localhost/clothing%20store/adminpanel/dashboard.php" class="nav-link"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
-        <li><a href="#" class="nav-link"><i class="bi bi-table me-2"></i> Orders</a></li>
+        <li><a href="http://localhost/clothing%20store/adminpanel/order.php" class="nav-link"><i class="bi bi-table me-2"></i> Orders</a></li>
         <li><a href="http://localhost/clothing%20store/products/product.php" class="nav-link"><i class="bi bi-grid me-2"></i> Products</a></li>
         <li><a href="http://localhost/clothing%20store/adminpanel/user.php" class="nav-link"><i class="bi bi-people me-2"></i> Customers</a></li>
         <li><a href="http://localhost/clothing%20store/adminpanel/category.php" class="nav-link"><i class="bi bi-tags me-2"></i> Categories</a></li>

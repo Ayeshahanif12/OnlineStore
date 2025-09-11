@@ -114,7 +114,7 @@ $messages = $row['message'];
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link">
+        <a href="http://localhost/clothing%20store/adminpanel/order.php" class="nav-link">
           <i class="bi bi-table me-2"></i> Orders
         </a>
       </li>
