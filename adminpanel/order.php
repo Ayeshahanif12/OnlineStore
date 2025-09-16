@@ -6,7 +6,7 @@ if (!$conn) {
 }
 
 // Pehle user ke sare orders fetch karo
-$checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSION['user_id']}' ORDER BY id DESC");
+$checkouts = mysqli_query($conn, "SELECT * FROM checkout");
 ?>
 
 <!DOCTYPE html>
@@ -225,7 +225,7 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
                 <h2>Order Details</h2>
                 <?php
 
-                $order_items = mysqli_query($conn, "SELECT * FROM order_items WHERE order_id='{$checkout['id']}'");
+                $order_items = mysqli_query($conn, "SELECT * FROM order_items");
                 $rows = mysqli_fetch_assoc($order_items);
 
                 ?>

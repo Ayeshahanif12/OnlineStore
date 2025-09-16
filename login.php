@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       header("Location: index.php");
     }
   } else {
-    echo "Invalid username or password";
+    echo "<script>alert('Invalid username or password');</script>";
   }
 }
 ?>
