@@ -347,6 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .section.active {
       display: block;
     }
+
     #track-order-btn {
       background: #000;
       color: #fff;
@@ -358,6 +359,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       margin-top: 15px;
       transition: 0.3s;
     }
+
     #track-order-btn:hover {
       background: #333;
     }
@@ -438,7 +440,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Shipping -->
-    <div id="shipping"  style=" overflow: hidden; max-width: 400px;
+    <div id="shipping" style=" overflow: hidden; max-width: 400px;
     margin: 0 auto;
     background: #fff;
     padding: 25px;
@@ -449,13 +451,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     " class="section">
       <h2>TRACK YOUR ORDER</h2>
-      <div class="form-control">
-        <input style="margin-left: 39px;" type="text" id="order_id" required>
-        <label style="margin-left: 39px;" for="order_id">Order ID</label>
-      </div>
+      <form action="" method="POST">
+        <div class="form-control">
+          <input style="margin-left: 39px;" type="text" id="order_id" name="order_id" required>
+          <label style="margin-left: 39px;" for="order_id">Order ID</label>
+        </div>
 
-      <button id="track-order-btn">Track Order</button>
+        <button type="submit" id="track-order-btn" name="track-order-btn">Track Order</button>
+      </form>
     </div>
+    <?php
+    if (isset($_POST['track-order-btn'])) {
+      if (!empty($_POST['order_id'])) {
+        $orderId = mysqli_real_escape_string($conn, $_POST['order_id']);
+
+        // Database query to fetch order status
+        $orderQuery = "SELECT status FROM order_items WHERE order_id = '$orderId' AND user_id = $userId";
+        $orderResult = mysqli_query($conn, $orderQuery);
+
+        if (mysqli_num_rows($orderResult) > 0) {
+          $order = mysqli_fetch_assoc($orderResult);
+          echo "<script>alert('Order Status: " . htmlspecialchars($order['status']) . "');</script>";
+        } else {
+          echo "<script>alert('No order found with this ID.');</script>";
+        }
+      } else {
+        echo "<script>alert('Please enter an Order ID.');</script>";
+      }
+    }
+    ?>
 
 
     <!-- Privacy Policy -->
