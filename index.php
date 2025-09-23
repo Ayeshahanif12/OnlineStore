@@ -200,8 +200,7 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
         <li> <a class="links" href="#policy">Policy</a> </li>
         <li> <a class="links" href="#contactus">Contact us</a> </li>
-        <li> <a class="links" href="logout.php">Log out</a> </li>
-        <li> <a class="links" href="http://localhost/clothing%20store/myaccount/account.php">My Profile</a> </li>
+        <li> <a class="links" href="http://localhost/clothing%20store/myaccount/settings.php">Settings</a> </li>
     </div>
   </div>
   </ul>

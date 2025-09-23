@@ -90,6 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <input type="password" name="password" id="password" placeholder="password" required />
 
       <button id="create" name="login">log in</button> <br>
+      <a href="http://localhost/clothing%20store/myaccount/forget_password.php">Forgot Password</a>
       <a style="display: block;
         margin: 0 auto;
         width: fit-content;
