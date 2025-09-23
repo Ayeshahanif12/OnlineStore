@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       padding: 0;
       display: flex;
       background: #f4f4f4;
+      overflow: hidden
     }
 
     .sidebar {
@@ -346,6 +347,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .section.active {
       display: block;
     }
+    #track-order-btn {
+      background: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+    #track-order-btn:hover {
+      background: #333;
+    }
   </style>
 </head>
 
@@ -423,14 +438,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Shipping -->
-    <div id="shipping" style="    max-width: 400px;
+    <div id="shipping"  style=" overflow: hidden; max-width: 400px;
     margin: 0 auto;
     background: #fff;
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     text-align: center;
-    transform: translate(2%, 133%);
+    transform: translate(2%, 63%);
 
     " class="section">
       <h2>TRACK YOUR ORDER</h2>
@@ -438,6 +453,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input style="margin-left: 39px;" type="text" id="order_id" required>
         <label style="margin-left: 39px;" for="order_id">Order ID</label>
       </div>
+
+      <button id="track-order-btn">Track Order</button>
     </div>
 
 
