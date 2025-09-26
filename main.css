@@ -96,6 +96,7 @@ nav h1 {
     /* Ensures the hover effect works */
     display: inline-block;
 }
+
 /* CARD CSS */
 
 /* .container {
@@ -154,7 +155,7 @@ input {
 
 
 input:focus {
-    border-color:3px solid black;
+    border-color: 3px solid black;
     box-shadow: 0 0 5px black;
 }
 
@@ -234,59 +235,8 @@ input::placeholder {
 
 
 
-.categories {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 150px;
-}
 
-.categories img {
-    width: 80px;
-    height: 80px;
-    background: white;
-    border-radius: 50%;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
-
-.categories a {
-    color: black;
-    margin-left: -145px;
-    margin-right: 51px;
-    text-decoration: none;
-}
-
-.category {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 100px;
-}
-
-.category img {
-    width: 80px;
-    height: 80px;
-    background: white;
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
-
-.category a {
-    color: black;
-    margin-top: 96px;
-    margin-left: -145px;
-    margin-right: 51px;
-}
 
 .cart-container {
     position: relative;
@@ -448,7 +398,7 @@ span {
 }
 
 .footer {
-    background-color:#f4f4f4;
+    background-color: #f4f4f4;
     color: #111;
     text-align: center;
     padding: 15px 10px;
@@ -702,7 +652,8 @@ span {
     padding-bottom: 36px;
     margin-bottom: 20px;
 }
-input{
+
+input {
     height: 60px;
     margin-bottom: 20px;
     border-radius: 0;
@@ -710,16 +661,18 @@ input{
 }
 
 #account {
-font-size: 30px;
-margin-bottom: 10px;
-font-weight: 900;    
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: 900;
 }
-input::placeholder{
-padding: 10px;
-font-size: 16px;
-text-transform: capitalize;
+
+input::placeholder {
+    padding: 10px;
+    font-size: 16px;
+    text-transform: capitalize;
 }
-#create{
+
+#create {
     width: 30%;
     height: 50px;
     background-color: black;
@@ -728,6 +681,7 @@ text-transform: capitalize;
     border: none;
     margin-bottom: 15px;
 }
-#create:hover{
+
+#create:hover {
     background-color: #111;
 }

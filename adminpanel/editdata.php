@@ -1,7 +1,7 @@
 <?php
 $conn = mysqli_connect("localhost", "root", "", "clothing_store");
 if (!$conn) {
-    die("Database connection failed: " . mysqli_connect_error());
+  die("Database connection failed: " . mysqli_connect_error());
 }
 
 $id = $_GET['id'];
@@ -16,34 +16,38 @@ $password = $row['password'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit User</title>
- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"> 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
   <style>
-     body {
+    body {
       min-height: 100vh;
       display: flex;
     }
+
     .sidebar {
       width: 280px;
       height: 100vh;
       background-color: #212529;
       color: white;
     }
+
     .sidebar .nav-link {
       color: white;
     }
+
     .sidebar .nav-link.active {
       background-color: #0d6efd;
     }
 
-   
+
     .main-section {
       flex: 1;
       display: flex;
@@ -56,12 +60,13 @@ $password = $row['password'];
       display: flex;
       flex-direction: column;
       justify-content: center;
-      max-width: 400px;
+      max-width: 700px;
+      height: 545px;
       width: 100%;
       padding: 20px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       background: #fff;
     }
 
@@ -95,6 +100,7 @@ $password = $row['password'];
     }
   </style>
 </head>
+
 <body>
   <div class="sidebar d-flex flex-column p-3">
     <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -127,7 +133,7 @@ $password = $row['password'];
           <i class="bi bi-people me-2"></i> Customers
         </a>
       </li>
-         <li>
+      <li>
         <a href="http://localhost/clothing%20store/adminpanel/category.php" class="nav-link">
           <i class="bi bi-tags me-2"></i> Categories
         </a>
@@ -145,7 +151,8 @@ $password = $row['password'];
     </ul>
     <hr>
     <div class="dropdown">
-      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+        data-bs-toggle="dropdown" aria-expanded="false">
         <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
         <strong>Admin</strong>
       </a>
@@ -153,7 +160,9 @@ $password = $row['password'];
         <li><a class="dropdown-item" href="#">New project...</a></li>
         <li><a class="dropdown-item" href="#">Settings</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
-        <li><hr class="dropdown-divider"></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
         <li><a class="dropdown-item" href="http://localhost/clothing%20store/login.php">Sign out</a></li>
       </ul>
     </div>
@@ -162,18 +171,44 @@ $password = $row['password'];
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Main Section -->
-    <main class="main-section">
-      <form action="updatedata.php" method="post">
-        <h2>Edit User</h2>
-        <input type="hidden" name="id" value="<?= $id ?>">
-        <input type="text" name="Fname" value="<?= $Fname ?>" placeholder="Enter first name" required>
-        <input type="text" name="Lname" value="<?= $Lname ?>" placeholder="Enter last name" required>
-        <input type="email" name="email" value="<?= $email ?>" placeholder="Enter email" required>
-        <input type="password" name="password" value="<?= $password ?>" placeholder="Enter password" required>
-        <button type="submit">Update</button>
-      </form>
-    </main>
+  <!-- Main Section -->
+  <main class="main-section">
+    <form action="updatedata.php" method="post">
+      <h2>Edit User</h2>
+      <input type="hidden" name="id" value="<?= $id ?>">
+      <input type="text" name="Fname" value="<?= $Fname ?>" placeholder="Enter first name" required>
+      <input type="text" name="Lname" value="<?= $Lname ?>" placeholder="Enter last name" required>
+      <input type="email" name="email" value="<?= $email ?>" placeholder="Enter email" required>
+      <div class="input-group mb-1">
+        <input type="password" id="password" name="password" value="<?= $password ?>" class="form-control"
+          placeholder="Enter password" required>
+        <span class="input-group-text" id="togglePassword" style="height: 38px; cursor: pointer;">
+          <i class="bi bi-eye-slash"></i>
+        </span>
+      </div>
+
+      <button type="submit">Update</button>
+    </form>
+  </main>
   </div>
+
+  <script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+    const icon = togglePassword.querySelector("i");
+
+    togglePassword.addEventListener("click", function () {
+      // toggle type
+      const type = password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+
+      // toggle icon
+      icon.classList.toggle("bi-eye");
+      icon.classList.toggle("bi-eye-slash");
+    });
+  </script>
+
+
 </body>
+
 </html>

@@ -38,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,10 +87,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="signup">
       <h1 id="account">Log in</h1>
 
-      <input type="email" name="email" id="email" placeholder="Email" required />
-      <input type="password" name="password" id="password" placeholder="password" required />
+ <div class="mb-2 position-relative">
+    <input type="email" class="form-control pe-5" name="email" id="email" placeholder="email"
+          required />
+          </div>
+      <div class="mb-2 position-relative">
+        <input type="password" class="form-control pe-5" name="password" id="password" placeholder="Password"
+          required />
 
-      <button id="create" name="login">log in</button> <br>
+        <!-- Eye Toggle -->
+        <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor:pointer;"
+          onclick="togglePassword()">
+          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="gray" class="bi bi-eye"
+            viewBox="0 0 16 16">
+            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 
+               5.5 8 5.5S16 8 16 8z" />
+            <path d="M8 5.5a2.5 2.5 0 1 1 0 
+               5 2.5 2.5 0 0 1 0-5z" />
+          </svg>
+        </span>
+      </div>
+<button id="create" name="login" style="margin-left: 5px;" class="btn btn-dark">login</button><br>
       <a href="http://localhost/clothing%20store/myaccount/forget_password.php">Forgot Password</a>
       <a style="display: block;
         margin: 0 auto;
@@ -185,6 +203,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 
 </body>
+<script>
+  function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      eyeIcon.setAttribute("class", "bi bi-eye-slash");
+      eyeIcon.innerHTML = `<path d="M13.359 11.238l2.147 
+    2.147-.708.707-2.147-2.147A7.487 
+    7.487 0 0 1 8 13.5c-5 0-8-5.5-8-5.5a15.45 
+    15.45 0 0 1 3.582-4.243l-2.147-2.147.707-.707 
+    12 12-.707.707-2.076-2.076z"/>`;
+    } else {
+      passwordInput.type = "password";
+      eyeIcon.setAttribute("class", "bi bi-eye");
+      eyeIcon.innerHTML = `<path d="M16 8s-3-5.5-8-5.5S0 
+    8 0 8s3 5.5 8 5.5S16 8 16 
+    8z"/><path d="M8 5.5a2.5 2.5 0 1 
+    1 0 5 2.5 2.5 0 0 1 0-5z"/>`;
+    }
+  }
+</script>
+
 
 </html>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

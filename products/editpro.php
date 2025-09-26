@@ -1,7 +1,7 @@
 <?php
 $conn = mysqli_connect("localhost", "root", "", "clothing_store");
 if (!$conn) {
-    die("Database connection failed: " . mysqli_connect_error());
+  die("Database connection failed: " . mysqli_connect_error());
 }
 
 $id = $_GET['id'];
@@ -16,117 +16,139 @@ $price = $row['price'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>Edit Product</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Product</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  
+
   <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"> 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <style>
-      
-/* General Page Styling */
-body {
-    display: flex;
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-.sidebar {
-    width: 250px;
-    background: #212529;
-    color: white;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 20px 0;
-}
-.sidebar .nav-link {
-    color: white;
-}
-.sidebar .nav-link.active {
-    background-color: #0d6efd;
-}
+    /* General Page Styling */
+    body {
+      display: flex;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
 
-.sidebar hr {
-  border-color: #444;
-}
+    .sidebar {
+      width: 250px;
+      background: #212529;
+      color: white;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px 0;
+    }
 
-.sidebar .dropdown-menu {
-  background-color: #2a2a2a;
-}
+    .sidebar .nav-link {
+      color: white;
+    }
 
-/* Main Form Section */
-.main-section {
-  margin-left: 300px; /* space for sidebar */
-  padding: 25px 30px;
-  border-radius: 10px;
-  max-width: 450px;
-  width: 100%;
-  margin-top: 40px;
-}
+    .sidebar .nav-link.active {
+      background-color: #0d6efd;
+    }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #212529;
-}
+    .sidebar hr {
+      border-color: #444;
+    }
 
-/* Form Inputs */
-label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
-  color:black;
-}
+    .sidebar .dropdown-menu {
+      background-color: #2a2a2a;
+    }
 
-input[type="text"],
-input[type="file"] {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  background: #ffffff;
-  border: 1px solid #444;
-  border-radius: 5px;
-  color: black;
-  outline: none;
-}
+    /* Main Form Section */
+    .main-section {
+      margin-left: 300px;
+      /* space for sidebar */
+      padding: 25px 30px;
+      border-radius: 10px;
+      max-width: 450px;
+      width: 100%;
+      margin-top: 40px;
+    }
 
-input[type="text"]:focus,
-input[type="file"]:focus {
-  border-color: #0d6efd;
-}
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #212529;
+    }
 
-img {
-  display: block;
-  margin: 10px auto;
-  max-width: 100px;
-  border-radius: 5px;
-}
+    /* Form Inputs */
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: black;
+    }
 
-/* Button */
-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 15px;
-  border: none;
-  background: #0d6efd;
-  color: white;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background: #ffffff;
+      border: 1px solid #444;
+      border-radius: 5px;
+      color: black;
+      outline: none;
+    }
 
-button:hover {
-  background: #0b5ed7;
-}
+    input[type="text"]:focus,
+    input[type="file"]:focus {
+      border-color: #0d6efd;
+    }
 
+    img {
+      display: block;
+      margin: 10px auto;
+      max-width: 100px;
+      border-radius: 5px;
+    }
+
+    /* Button */
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      border: none;
+      background: #0d6efd;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0b5ed7;
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--bs-body-color);
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-color: var(--bs-body-bg);
+      background-clip: padding-box;
+      border: var(--bs-border-width) solid var(--bs-border-color);
+      border-radius: var(--bs-border-radius);
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
   </style>
 </head>
+
 <body>
 
   <div class="sidebar d-flex flex-column p-3">
@@ -160,7 +182,7 @@ button:hover {
           <i class="bi bi-people me-2"></i> Customers
         </a>
       </li>
-         <li>
+      <li>
         <a href="http://localhost/clothing%20store/adminpanel/category.php" class="nav-link">
           <i class="bi bi-tags me-2"></i> Categories
         </a>
@@ -173,12 +195,13 @@ button:hover {
       <li>
         <a href="http://localhost/clothing%20store/contactus/fetchmessages.php" class="nav-link">
           <i class="bi bi-telephone me-2"></i> Contact Us
-         </a>
+        </a>
       </li>
     </ul>
     <hr>
     <div class="dropdown" style="display:flex;">
-      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+        data-bs-toggle="dropdown" aria-expanded="false">
         <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
         <strong>Admin</strong>
       </a>
@@ -186,7 +209,9 @@ button:hover {
         <li><a class="dropdown-item" href="#">New project...</a></li>
         <li><a class="dropdown-item" href="#">Settings</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
-        <li><hr class="dropdown-divider"></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
         <li><a class="dropdown-item" href="http://localhost/clothing%20store/login.php">Sign out</a></li>
       </ul>
     </div>
@@ -195,30 +220,40 @@ button:hover {
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
 
 
-    <main class="main-section">
-      <form action="updatepro.php" method="post" enctype="multipart/form-data">
-        <h2>Edit Product</h2>
-        <input type="hidden" name="id" value="<?= $id ?>">
+<main class="main-section">
+  <form action="updatepro.php" method="post" enctype="multipart/form-data">
+    <h2>Edit Product</h2>
+    <input type="hidden" name="id" value="<?= $id ?>">
 
-        <label>Current Image</label>
-        <img src="image/<?= $image ?>" alt="Product Image">
-        <label for="image">Change Image</label>
-        <input type="file" name="image">
+    <label>Current Image</label>
+    <img src="image/<?= $image ?>" alt="Product Image">
+    <label for="image">Change Image</label>
+    <input type="file" name="image">
 
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" value="<?= $name ?>" required>
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" value="<?= $name ?>" required>
 
-        <label for="description">Description</label>
-        <input type="text" name="description" id="description" value="<?= $description ?>" required>
+    <label for="description">Description</label>
+    <input type="text" name="description" id="description" value="<?= $description ?>" required>
 
-        <label for="price">Price</label>
-        <input type="text" name="price" id="price" value="<?= $price ?>" required>
+    <label for="price">Price</label>
+    <input type="text" name="price" id="price" value="<?= $price ?>" required>
+    <select name="category_id" class="form-control mb-2" required>
+      <?php
+      $cats = mysqli_query($conn, "SELECT * FROM nav_categories");
+      while ($cat = mysqli_fetch_assoc($cats)) {
+        echo "<option value='{$cat['id']}'>{$cat['name']}</option>";
+      }
+      ?>
+    </select>
 
-        <button type="submit">Update</button>
-      </form>
-    </main>
+    <button type="submit">Update</button>
+  </form>
+</main>
 </body>
+
 </html>

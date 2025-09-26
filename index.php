@@ -96,7 +96,9 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <Label></Label>
@@ -104,20 +106,84 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   <title>Trendy Wear</title>
   <style>
     /* card css */
-    .p-card {
-      background-color: antiquewhite;
-      padding: 13px;
-      width: 23%;
-      border-radius: 30px;
-    }
-
     .P-container {
-
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-around;
-      margin: 20px 0;
+      gap: 20px;
+      justify-content: flex-start;
+      margin-bottom: 40px;
     }
+
+    .p-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      width: 23%;
+      min-width: 250px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .p-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .p-card img {
+      width: 80%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .p-card .card-body {
+      padding: 10px 0;
+    }
+
+    .p-card .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 8px;
+      text-transform: capitalize;
+    }
+
+    .p-card .card-text {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .p-card .card-text:last-of-type {
+      font-size: 16px;
+      font-weight: bold;
+      color: #121212;
+    }
+
+    .addToCart {
+      background: #000;
+      color: #fff;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 101%;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .addToCart:hover {
+      background: #333;
+      transform: scale(1.05);
+    }
+
+
 
     .btn-custom {
       display: block;
@@ -137,16 +203,20 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       background-color: #333;
     }
 
-    .search-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
+
 
     .search-icon {
       font-size: 20px;
       color: white;
       cursor: pointer;
+    }
+
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      z-index: 9999;
+      /* upar rakhne ke liye */
     }
 
     .search-bar {
@@ -157,18 +227,123 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       border: none;
       border-radius: 4px;
       transition: all 0.3s ease;
+      background: white;
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     .search-container.active .search-bar {
       width: 200px;
-      /* Toggle hone ke baad width */
+      /* expand hone ke baad width */
       opacity: 1;
     }
+
+
 
     /* Hide clear (X) button in search inputs for WebKit browsers */
     input[type="search"]::-webkit-search-cancel-button {
       -webkit-appearance: none;
       appearance: none;
+    }
+
+    .categories {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      /* categories ke beech gap */
+      margin-top: 100px;
+      margin-bottom: 60px;
+      flex-wrap: wrap;
+    }
+
+    .category-item a {
+      display: flex;
+      flex-direction: column;
+      /* image upar, text neeche */
+      align-items: center;
+      text-decoration: none;
+      color: #000;
+      margin-left: 45px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .category-item:hover {
+      transform: translateY(-6px);
+    }
+
+    .category-item img {
+      width: 90px;
+      height: 90px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      object-fit: cover;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .category-item:hover img {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .category-item span {
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: #313131ff;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    @media (max-width: 576px) {
+
+
+      /* NAVBAR TITLE */
+      nav h1 {
+        color: white;
+        font-size: 24px;
+        margin: 10px 20px;
+        display: inline-block;
+      }
+
+      /* Navbar icons ko align karna */
+      .icons {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        float: right;
+        margin-right: 20px;
+      }
+
+      .P-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .search-box {
+      display: none;
+      position: absolute;
+      top: 70px;
+      /* navbar ke neeche show karega */
+      right: 0;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      min-width: 350px;
+      z-index: 1000;
+    }
+
+    .search-box.active {
+      display: block;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 7px;
+      border: 2px solid #121212;
+      /* black border so badge looks clean */
     }
   </style>
 </head>
@@ -178,18 +353,12 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     <div class="bg-dark p-4">
       <span class="text-muted"></span>
       <ul>
-        <li> <a class="links" href="index.html">Home</a></li>
+        <li> <a class="links" href="index.php">Home</a></li>
         <li class="nav-item">
           <a class="links" href="#">Categories</a>
           <ul class="type">
-            <!-- <li><a href="#cart1">Unstitched</a></li>
-            <li><a href="#cart2">Bottoms</a></li>
-            <li><a href="#cart3">Pret 3 Piece</a></li>
-            <li><a href="#cart4">Luxury Pret</a></li>
-            <li><a href="#cart5">Festive Collection</a></li>
-            <li><a href="#cart6">Solids</a></li>
-            <li><a href="#cart7">Kids</a></li>
-            <li><a href="#cart8">Mens</a></li> -->
+
+
             <?php
             while ($row = mysqli_fetch_assoc($category)) {
               echo "<li><a href='#cart{$row['id']}'>{$row['name']}</a></li>";
@@ -214,95 +383,138 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     </div>
   </nav>
 
+  <nav class="navbar navbar-dark" style="background-color:#121212; height:70px; padding:0 20px; position:relative;">
+    <h1 style="color:white; margin:0; text-align: center;">Trendy Wear</h1>
 
-  <nav style="background-color: #121212; height: 70px;">
-    <h1>Trendy Wear</h1>
+    <div class="d-flex align-items-center ms-auto">
 
-    <div class="icons">
-      <div class="search-container" id="searchBox">
-        <i class="fa fa-search search-icon" id="toggleSearch"></i>
-        <form method="GET" action="index.php" style="margin:0;">
-          <input type="text" class="search-bar" name="search" placeholder="Search by ID or Name..."
-            value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-        </form>
+      <!-- Search Wrapper -->
+      <div class="search-wrapper position-relative">
+        <!-- Search Icon -->
+        <i class="bi bi-search text-white fs-5" id="openSearch" style="cursor:pointer;"></i>
+
+        <!-- Search Box -->
+        <div class="search-box" id="searchBox" style="height: 50px;">
+          <form method="GET" action="index.php" class="d-flex w-100" style="height: 34px;">
+            <input style="height: 40px;" type="text" class="form-control" name="search"
+              placeholder="Search by ID or Name..."
+              value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <button type="button" class="btn btn-sm btn-dark ms-2" id="closeSearch">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </form>
+        </div>
       </div>
 
-      <script>
-        const toggleBtn = document.getElementById("toggleSearch");
-        const searchBox = document.getElementById("searchBox");
+      <!-- Shipping Icon -->
+      <a href="order_status.php" class="ms-3 text-white">
+        <i class="fa fa-truck fs-5"></i>
+      </a>
 
-        toggleBtn.addEventListener("click", () => {
-          searchBox.classList.toggle("active");
-        });
-      </script>
-      <div class="shipping-container">
-        <a href="http://localhost/clothing%20store/order_status.php" style="color: white;"><i class="fa fa-truck"></i>
-          <!-- Truck Icon -->
-        </a>
-      </div>
+      <!-- Cart Icon -->
+      <button class="btn ms-3 position-relative" style="background:transparent; border:none;" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+
+        <!-- Cart Icon -->
+        <i class="fa fa-shopping-cart text-white fs-5"></i>
+
+        <!-- Badge -->
+        <?php
+        $cartCount = 0;
+        $result = mysqli_query($conn, "SELECT COUNT(*) AS totalItems FROM cart");
+        if ($result) {
+          $row = mysqli_fetch_assoc($result);
+          $cartCount = $row['totalItems'] ?? 0;
+        }
+        ?>
+
+        <?php if ($cartCount > 0): ?>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <?php echo $cartCount; ?>
+          </span>
+        <?php endif; ?>
+      </button>
+
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasRightLabel">My Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+
+          </button>
+        </div>
+        <div class="offcanvas-body" id="cartItems">
 
 
-      <div class="person-icon">
-        <a style="color: white;" href="http://localhost/clothing%20store/signup.php"> <i class="fa fa-user"></i> </a>
 
+          <?php
 
+          $result = mysqli_query($conn, "SELECT * FROM cart");
+          $total = 0;
+          if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+              $subtotal = $row['total'];
+              $total += $subtotal;
+              echo "
+<div class='cart-item d-flex align-items-center mb-3'>
+  <img src='{$row['image']}' width='50' class='me-2'>
+  <div class='flex-grow-1'>
+    <h6>{$row['name']}</h6>
+    <p>PKR {$row['price']} x {$row['qty']} = PKR {$subtotal}</p>
+  </div>
+  <form method='post' action='index.php#openCart'>
+    <input type='hidden' name='remove_id' value='{$row['product_id']}'>
+    <button type='submit' class='btn btn-sm btn-danger'>
+      <i class='fa fa-trash'></i>
+    </button>
+  </form>
+</div>
 
-
-        </a>
-        <div class="cart-container">
-
-          <button class="btn btn-primary" style="background-color:transparent;border:none;" type="button"
-            data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"> <i
-              class="fa fa-shopping-cart"></i> <!-- Cart Icon --></button>
-
-          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasRightLabel">My Cart</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body" id="cartItems">
-
-              <?php
-
-              $result = mysqli_query($conn, "SELECT * FROM cart");
-              $total = 0;
-              if (mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                  $subtotal = $row['total'];
-                  $total += $subtotal;
-                  echo "
-    <div class='cart-item d-flex align-items-center mb-3'>
-      <img src='{$row['image']}' width='50' class='me-2'>
-      <div class='flex-grow-1'>
-        <h6>{$row['name']}</h6>
-        <p>PKR {$row['price']} x {$row['qty']} = PKR {$subtotal}</p>
-      </div>
-      <form method='post' action='index.php#openCart'>
-        <input type='hidden' name='remove_id' value='{$row['product_id']}'>
-        <button type='submit' class='btn btn-sm btn-danger'>
-          <i class='fa fa-trash'></i>
-        </button>
-      </form>
-    </div>
     ";
-                }
-                echo "<hr><h5>Total: PKR $total</h5>";
-              } else {
-                echo "<p>Your cart is empty.</p>";
-              }
-              ?>
+            }
+            echo "<hr><h5>Total: PKR $total</h5>";
+          } else {
+            echo "<p>Your cart is empty.</p>";
+          }
+          ?>
 
-            </div>
+        </div>
 
-            <div style="text-align: center; margin: 20px;">
-              <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
-              <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
-            </div>
+        <div style="text-align: center; margin: 20px;">
+          <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
+          <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
+        </div>
+
 
 
   </nav>
-  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel"
-    style="position: absolute; top: 100px; width: 100%; z-index: -1; margin-top: 50px;">
+  <script>
+    const openSearch = document.getElementById("openSearch");
+    const closeSearch = document.getElementById("closeSearch");
+    const searchBox = document.getElementById("searchBox");
+    const searchForm = searchBox.querySelector("form");
+    const searchInput = searchBox.querySelector("input");
+
+    // Open search
+    openSearch.addEventListener("click", () => {
+      searchBox.classList.add("active");
+      searchInput.focus();
+    });
+
+    // Close search
+    closeSearch.addEventListener("click", () => {
+      searchBox.classList.remove("active");
+    });
+
+    // Clear input after form submit
+    searchForm.addEventListener("submit", () => {
+      setTimeout(() => {
+        searchInput.value = "";       // input empty ho jayega
+        // searchBox.classList.remove("active"); // agar chaho to search bar bhi close ho jaye
+      }, 100);
+    });
+  </script>
+
+  <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
     <?php
     $select = "SELECT * FROM carousel";
     $result = mysqli_query($conn, $select);
@@ -315,332 +527,366 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     } else {
       echo "<p>No carousel found.</p>";
     }
-
-
     ?>
+
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+      <?php foreach ($dataAll as $index => $row): ?>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="<?php echo $index; ?>"
+          class="<?php echo $index === 0 ? 'active' : ''; ?>"
+          aria-current="<?php echo $index === 0 ? 'true' : 'false'; ?>" aria-label="Slide <?php echo $index + 1; ?>">
+        </button>
+      <?php endforeach; ?>
+    </div>
+
+    <!-- Slides -->
     <div class="carousel-inner">
-      <?php foreach ($dataAll as $row): ?>
-        <div class="carousel-item active">
+      <?php foreach ($dataAll as $index => $row): ?>
+        <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
           <img src="<?php echo htmlspecialchars('image/' . $row['img']); ?>" class="d-block w-100"
             alt="<?php echo htmlspecialchars($row['alt_text']); ?>">
           <div class="carousel-caption d-none d-md-block">
             <p style="display: none;"><?php echo htmlspecialchars($row['alt_text']); ?></p>
           </div>
         </div>
-
       <?php endforeach; ?>
-
-
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-        data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-        data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-
-
     </div>
 
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
 
 
-    <div style="margin: 0px;" id="cat">
-      <div class="categories" style="margin-top: 150px;">
-        <?php
-        $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
-        while ($fcat = mysqli_fetch_assoc($cat)) {
-          echo "<img src='image/{$fcat['img']}' alt='{$fcat['name']}'><br>";
-          echo "<a href='#cart{$fcat['id']}'>{$fcat['name']}</a>";
-        }
-        ?>
-      </div>
-    </div>
-
-    <?php if (isset($_GET['search'])): ?>
-      <div style="margin:20px;">
-        <h3 style="color:#121212;">Search Results:</h3>
-        <?php if (count($searchResults) > 0): ?>
-          <div class="P-container" style="gap:10px;">
-            <?php foreach ($searchResults as $rows): ?>
-              <div class="p-card">
-                <img src="image/<?php echo $rows['image']; ?>"
-                  style="width:60%;margin-left:30px;border-radius:10px;height:auto;">
-                <div class="card-body">
-                  <h5 style="font-weight:bold;color:#121212;font-size:18px;text-transform:capitalize;">
-                    <?php echo $rows['name']; ?>
-                  </h5>
-                  <p style="color:gray;"><?php echo $rows['description']; ?></p>
-                  <p style="color:black;">PKR <?php echo $rows['price']; ?></p>
-                  <form method="post" action="index.php#openCart">
-                    <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
-                    <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
-                    <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
-                    <input type="hidden" name="image" value="image/<?php echo $rows['image']; ?>">
-                    <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
-                  </form>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        <?php else: ?>
-          <p style="color:red;">No products found for "<?php echo htmlspecialchars($_GET['search']); ?>"</p>
-        <?php endif; ?>
-      </div>
-    <?php endif; ?>
 
 
-    <!-- PRODUCT CARD CONTAINER -->
-    <?php
-
-    $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
-
-    while ($fcat = mysqli_fetch_assoc($cat)) {
-      echo "<div class='P-container' style='gap:10px;' id='cart{$fcat['id']}'>";
-      $pro = mysqli_query($conn, "SELECT * FROM products WHERE category_id = {$fcat['id']}");
-      while ($rows = mysqli_fetch_assoc($pro)) { ?>
-        <div class="p-card">
-          <img src="image/<?php echo $rows['image']; ?>" alt=""
-            style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
-          <div class="card-body">
-            <h5 class="card-title"><span
-                style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
-            </h5>
-            <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
-            <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
-            <form method="post" action="index.php#openCart">
-              <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
-              <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
-              <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
-              <input type="hidden" name="image" value="image/<?php echo $rows['image']; ?>">
-              <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
-            </form>
-
-          </div>
+  <div style="margin: 0px;" id="cat">
+    <div class="categories" style="margin-top: 150px;">
+      <?php
+      $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
+      while ($fcat = mysqli_fetch_assoc($cat)) {
+        echo "
+        <div class='category-item'>
+          <a href='#cart{$fcat['id']}'>
+            <img src='image/{$fcat['img']}' alt='{$fcat['name']}'>
+            <span>{$fcat['name']}</span>
+          </a>
         </div>
-
-
-      <?php }
-      echo "</div>";
-
-    } ?>
-
-
-
-
-
-
-
-
-
-
-    <!-- POLICY DIV -->
-    <div id="policy">
-      <section class="privacy-policy">
-        <div class="policy-wrapper">
-          <h1 class="policy-title">Privacy Policy</h1>
-          <p class="policy-intro">
-            At <strong>Trendy Wear</strong>, we are committed to protecting your privacy and ensuring that your personal
-            information is handled in a safe and responsible manner.
-          </p>
-
-          <div class="policy-section">
-            <h2>1. Information We Collect</h2>
-            <p>We collect personal information including your name, email, shipping address, and payment details when
-              you
-              place an order or create an account with us.</p>
-          </div>
-
-          <div class="policy-section">
-            <h2>2. Use of Information</h2>
-            <p>Your information is used to process your orders, improve our services, and communicate updates or
-              promotional offers — only if you opt-in.</p>
-          </div>
-
-          <div class="policy-section">
-            <h2>3. Data Security</h2>
-            <p>All data is encrypted and stored securely. We implement strict measures to prevent unauthorized access,
-              misuse, or disclosure.</p>
-          </div>
-
-          <div class="policy-section">
-            <h2>4. Cookies</h2>
-            <p>We use cookies to personalize your experience, analyze site traffic, and enhance website functionality.
-              You
-              can manage cookies in your browser settings.</p>
-          </div>
-
-          <div class="policy-section">
-            <h2>5. Third-Party Disclosure</h2>
-            <p>We do not sell or trade your personal information. It may be shared only with trusted partners who assist
-              us in delivering our services.</p>
-          </div>
-
-          <div class="policy-section">
-            <h2>6. Your Rights</h2>
-            <p>You may request access to, correction of, or deletion of your personal data at any time by contacting us.
-            </p>
-          </div>
-
-          <p class="policy-footer">
-            For any queries, please contact us at <a href="mailto:support@trendywear.com">support@trendywear.com</a>
-          </p>
-        </div>
-      </section>
-
+      ";
+      }
+      ?>
     </div>
+  </div>
 
-    <!-- CONTACT US  -->
-    <div id="contactus">
-      <section class="contact-section">
-        <div class="contact-wrapper">
-          <h2 class="contact-title">Contact Us</h2>
-          <form class="contact-form" method="post">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" placeholder="Your Name" required />
-            </div>
+  <?php
+  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
+  $searchResults = [];
 
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" placeholder="Your Email" required />
-            </div>
+  if (isset($_GET['search']) && $_GET['search'] !== "") {
+    $search = mysqli_real_escape_string($conn, $_GET['search']);
+    $sql = "SELECT * FROM products WHERE name LIKE '%$search%' OR id LIKE '%$search%'";
+    $result = mysqli_query($conn, $sql);
 
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea id="message" rows="5" name="message" placeholder="Your Message" required></textarea>
-            </div>
-
-            <button type="submit" class="contact-btn" name="contact">Send Message</button>
-          </form>
-        </div>
-      </section>
-    </div>
-
-
-    <!-- CONNECTING CONTACT US WITH PHP -->
-    <?php
-    $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-    if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-    }
-
-    if (isset($_POST['contact'])) {
-      $name = htmlspecialchars(trim($_POST['name']));
-      $email = htmlspecialchars(trim($_POST['email']));
-      $message = htmlspecialchars(trim($_POST['message']));
-
-      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('Invalid Email Address');</script>";
-      } else {
-        $stmt = mysqli_prepare($conn, "INSERT INTO contact_us (name, email, message) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "sss", $name, $email, $message);
-        $exe = mysqli_stmt_execute($stmt);
-
-        if ($exe) {
-          echo "<script>alert('Message sent successfully!');</script>";
-        } else {
-          echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
-        }
-
-        mysqli_stmt_close($stmt);
+    if ($result) {
+      while ($row = mysqli_fetch_assoc($result)) {
+        $searchResults[] = $row;
       }
     }
+  }
+  ?>
 
-    mysqli_close($conn);
-    ?>
+  <?php if (isset($_GET['search'])): ?>
+    <div style="margin:20px;">
+      <h3 style="color:#121212;">Search Results:</h3>
+      <?php if (count($searchResults) > 0): ?>
+        <div class="P-container">
+          <?php foreach ($searchResults as $rows): ?>
+            <div class="p-card">
+              <img src="<?php echo $rows['image']; ?>" alt=""
+                style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
+              <div class="card-body">
+                <h5 class="card-title"><span
+                    style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
+                </h5>
+                <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
+                <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
+                <form method="post" action="index.php#openCart">
+                  <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
+                  <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
+                  <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
+                  <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
+                  <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
+                </form>
+
+              </div>
+            </div>
 
 
-    <!-- FOOTER -->
-    <div class="foot">
-      <div class="footercontainer">
-        <h3 style="margin-top: 7px;">About Trendy Wear</h3>
-        <a href="">ABOUT US </a>
-        <a href="">COMPANY</a>
-        <a href="">CAREERS</a>
-        <a href="">BLOGS</a>
-        <a href="">STORE LOCATORS</a>
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <p style="color:red;">No products found for "<?php echo htmlspecialchars($_GET['search']); ?>"</p>
+      <?php endif; ?>
+    </div>
+  <?php endif; ?>
+
+
+
+  <!-- PRODUCT CARD CONTAINER -->
+  <?php
+
+  $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
+
+  while ($fcat = mysqli_fetch_assoc($cat)) {
+    echo "<div class='P-container' id='cart{$fcat['id']}'>";
+    $pro = mysqli_query($conn, "SELECT * FROM products WHERE category_id = {$fcat['id']}");
+    while ($rows = mysqli_fetch_assoc($pro)) { ?>
+      <div class="p-card">
+        <img src="<?php echo $rows['image']; ?>" alt=""
+          style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
+        <div class="card-body">
+          <h5 class="card-title"><span
+              style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
+          </h5>
+          <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
+          <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
+          <form method="post" action="index.php#openCart">
+            <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
+            <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
+            <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
+            <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
+            <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
+          </form>
+
+        </div>
       </div>
 
-      <div class="footercontainer">
-        <h3>MY ACCOUNT</h3>
-        <a href="login.php">LOGIN</a>
-        <a href="signup.php">CREATE ACCOUNT</a>
-        <a href="signup.php">ACCOUNT INFO</a>
-        <a href="#">ORDER HISTORY</a>
-        <a href="#">ORDER HISTORY</a>
+
+    <?php }
+    echo "</div>";
+
+  } ?>
+
+
+
+
+
+
+
+
+
+
+  <!-- POLICY DIV -->
+  <div id="policy">
+    <section class="privacy-policy">
+      <div class="policy-wrapper">
+        <h1 class="policy-title">Privacy Policy</h1>
+        <p class="policy-intro">
+          At <strong>Trendy Wear</strong>, we are committed to protecting your privacy and ensuring that your personal
+          information is handled in a safe and responsible manner.
+        </p>
+
+        <div class="policy-section">
+          <h2>1. Information We Collect</h2>
+          <p>We collect personal information including your name, email, shipping address, and payment details when
+            you
+            place an order or create an account with us.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. Use of Information</h2>
+          <p>Your information is used to process your orders, improve our services, and communicate updates or
+            promotional offers — only if you opt-in.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. Data Security</h2>
+          <p>All data is encrypted and stored securely. We implement strict measures to prevent unauthorized access,
+            misuse, or disclosure.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Cookies</h2>
+          <p>We use cookies to personalize your experience, analyze site traffic, and enhance website functionality.
+            You
+            can manage cookies in your browser settings.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>5. Third-Party Disclosure</h2>
+          <p>We do not sell or trade your personal information. It may be shared only with trusted partners who assist
+            us in delivering our services.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>6. Your Rights</h2>
+          <p>You may request access to, correction of, or deletion of your personal data at any time by contacting us.
+          </p>
+        </div>
+
+        <p class="policy-footer">
+          For any queries, please contact us at <a href="mailto:support@trendywear.com">support@trendywear.com</a>
+        </p>
       </div>
+    </section>
 
-      <div class="footercontainer">
-        <h3 style="margin-top: 1px;">FIND US ON</h3>
-        <a href="#">INSTAGRAM</a>
-        <a href="#">FACEBOOK</a>
-        <a href="#">TWITTER</a>
-        <a href="#">WHATSAPP</a>
-        <a href="#">YOUTUBE</a>
-      </div>
+  </div>
 
+  <!-- CONTACT US  -->
+  <div id="contactus">
+    <section class="contact-section">
+      <div class="contact-wrapper">
+        <h2 class="contact-title">Contact Us</h2>
+        <form class="contact-form" method="post">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required />
+          </div>
 
-      <!-- NEWSLETTER -->
-      <div class="footercontainer">
-        <h3 style="margin-top: 1px;">SIGN UP FOR UPDATES</h3>
-        <P>By entering your email address below, you consent to receiving <br> our newsletter with access to our latest
-          collections, events and initiatives. more details on this <br> are provided in our Privacy Policy.</P>
-        <form action="" method="post">
-          <input type="email" name="email" id="" placeholder="Email Address">
-          <input type="tel" name="whatsapp" id="" placeholder="Whatsapp Number">
-          <button class="send-btn" name="subscribe">Subscribe</button>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Your Email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" rows="5" name="message" placeholder="Your Message" required></textarea>
+          </div>
+
+          <button type="submit" class="contact-btn" name="contact">Send Message</button>
         </form>
       </div>
+    </section>
+  </div>
 
-    </div>
 
-    <?php
+  <!-- CONNECTING CONTACT US WITH PHP -->
+  <?php
+  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
 
-    // CONNECTING NEWSLETTER WITH PHP
-    
-    // Connect to database
-    $conn = mysqli_connect("localhost", "root", "", "clothing_store");
+  if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+  }
 
-    if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-    }
+  if (isset($_POST['contact'])) {
+    $name = htmlspecialchars(trim($_POST['name']));
+    $email = htmlspecialchars(trim($_POST['email']));
+    $message = htmlspecialchars(trim($_POST['message']));
 
-    if (isset($_POST['subscribe'])) {
-      $email = $_POST['email'];
-      $whatsapp = $_POST['whatsapp'];
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      echo "<script>alert('Invalid Email Address');</script>";
+    } else {
+      $stmt = mysqli_prepare($conn, "INSERT INTO contact_us (name, email, message) VALUES (?, ?, ?)");
+      mysqli_stmt_bind_param($stmt, "sss", $name, $email, $message);
+      $exe = mysqli_stmt_execute($stmt);
 
-      // Optional: Input Validation
-      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('Invalid email');</script>";
-      } elseif (!preg_match('/^\d{11}$/', $whatsapp)) {
-        echo "<script>alert('WhatsApp number must be 11 digits');</script>";
+      if ($exe) {
+        echo "<script>alert('Message sent successfully!');</script>";
       } else {
-        // Fix: use correct column name 'whatsappno'
-        $stmt = mysqli_prepare($conn, "INSERT INTO newsletter (email, whatsappno) VALUES (?, ?)");
-        mysqli_stmt_bind_param($stmt, "ss", $email, $whatsapp);
-        $exe = mysqli_stmt_execute($stmt);
-
-        if ($exe) {
-          echo "<script>alert('Subscription successful');</script>";
-        } else {
-          echo "<script>alert('Insert failed: " . mysqli_error($conn) . "');</script>";
-        }
-
-        mysqli_stmt_close($stmt);
+        echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
       }
+
+      mysqli_stmt_close($stmt);
     }
+  }
 
-    mysqli_close($conn);
-    ?>
+  mysqli_close($conn);
+  ?>
 
 
-    <div class="footer">
-      <p style="margin-top: 13px; font-size: 26px;">&#169; trendywear copyright 2024</p>
+  <!-- FOOTER -->
+  <div class="foot">
+    <div class="footercontainer">
+      <h3 style="margin-top: 7px;">About Trendy Wear</h3>
+      <a href="">ABOUT US </a>
+      <a href="">COMPANY</a>
+      <a href="">CAREERS</a>
+      <a href="">BLOGS</a>
+      <a href="">STORE LOCATORS</a>
     </div>
+
+    <div class="footercontainer">
+      <h3>MY ACCOUNT</h3>
+      <a href="login.php">LOGIN</a>
+      <a href="signup.php">CREATE ACCOUNT</a>
+      <a href="signup.php">ACCOUNT INFO</a>
+      <a href="#">ORDER HISTORY</a>
+      <a href="#">ORDER HISTORY</a>
+    </div>
+
+    <div class="footercontainer">
+      <h3 style="margin-top: 1px;">FIND US ON</h3>
+      <a href="#">INSTAGRAM</a>
+      <a href="#">FACEBOOK</a>
+      <a href="#">TWITTER</a>
+      <a href="#">WHATSAPP</a>
+      <a href="#">YOUTUBE</a>
+    </div>
+
+
+    <!-- NEWSLETTER -->
+    <div class="footercontainer">
+      <h3 style="margin-top: 1px;">SIGN UP FOR UPDATES</h3>
+      <P>By entering your email address below, you consent to receiving <br> our newsletter with access to our latest
+        collections, events and initiatives. more details on this <br> are provided in our Privacy Policy.</P>
+      <form action="" method="post">
+        <input type="email" name="email" id="" placeholder="Email Address">
+        <input type="tel" name="whatsapp" id="" placeholder="Whatsapp Number">
+        <button class="send-btn" name="subscribe">Subscribe</button>
+      </form>
+    </div>
+
+  </div>
+
+  <?php
+
+  // CONNECTING NEWSLETTER WITH PHP
+  
+  // Connect to database
+  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
+
+  if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+  }
+
+  if (isset($_POST['subscribe'])) {
+    $email = $_POST['email'];
+    $whatsapp = $_POST['whatsapp'];
+
+    // Optional: Input Validation
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      echo "<script>alert('Invalid email');</script>";
+    } elseif (!preg_match('/^\d{11}$/', $whatsapp)) {
+      echo "<script>alert('WhatsApp number must be 11 digits');</script>";
+    } else {
+      // Fix: use correct column name 'whatsappno'
+      $stmt = mysqli_prepare($conn, "INSERT INTO newsletter (email, whatsappno) VALUES (?, ?)");
+      mysqli_stmt_bind_param($stmt, "ss", $email, $whatsapp);
+      $exe = mysqli_stmt_execute($stmt);
+
+      if ($exe) {
+        echo "<script>alert('Subscription successful');</script>";
+      } else {
+        echo "<script>alert('Insert failed: " . mysqli_error($conn) . "');</script>";
+      }
+
+      mysqli_stmt_close($stmt);
+    }
+  }
+
+  mysqli_close($conn);
+  ?>
+
+
+  <div class="footer">
+    <p style="margin-top: 13px; font-size: 26px;">&#169; trendywear copyright 2024</p>
+  </div>
 
 </body>
 
@@ -654,4 +900,6 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       myOffcanvas.show();
     }
   });
+
 </script>
+<script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

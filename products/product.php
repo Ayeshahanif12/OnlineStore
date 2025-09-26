@@ -66,7 +66,7 @@ body {
     background: #1f1f1f;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255,255,255,0.1);
-    width: 250px;
+    width: 207px;
     overflow: hidden;
     transition: transform 0.2s ease;
 }
@@ -75,8 +75,10 @@ body {
 }
 .p-card img {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: auto;
+    height: 207px;
+    object-fit: contain;
+    padding: 20px;
 }
 .card-body {
     padding: 15px;
@@ -104,7 +106,6 @@ body {
     padding: 5px 10px;
     border-radius: 5px;
     text-decoration: none;
-
 }
 .btn-delete {
     background: #E53935;
@@ -113,7 +114,6 @@ body {
     padding: 5px 10px;
     border-radius: 5px;
 }
-
 .no-products {
     font-size: 18px;
     text-align: center;
@@ -164,7 +164,7 @@ body {
     <form action="" method="post" enctype="multipart/form-data" class="mb-4">
         <h3>Add New Product</h3>
         <input type="text" name="name" placeholder="Enter Name" class="form-control mb-2" required>
-        <input type="file" name="image" class="form-control mb-2">
+        <input type="file" name="image" class="form-control mb-2" required>
         <input type="text" name="description" placeholder="Enter Description" class="form-control mb-2" required>
         <input type="text" name="price" placeholder="Enter Price" class="form-control mb-2" required>
         <select name="category_id" class="form-control mb-2" required>
@@ -177,57 +177,63 @@ body {
         </select>
         <input type="submit" value="Upload" class="btn btn-primary">
     </form>
+
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    $cat_id = $_POST['category_id'];
+        $name = $_POST['name'];
+        $description = $_POST['description'];
+        $price = $_POST['price'];
+        $cat_id = $_POST['category_id'];
 
-    if (isset($_FILES['image'])) {
-        $image_name = $_FILES['image']['name'];
-        $image_tmp = $_FILES['image']['tmp_name'];
+        if (isset($_FILES['image'])) {
+            $image_name = str_replace(" ", "_", $_FILES['image']['name']); // replace spaces
+            $image_tmp = $_FILES['image']['tmp_name'];
 
-        $target_path = "image/" . $image_name;
+            // Products folder se ek level upar jao -> clothing store/image/
+            $target_path = "../image/" . basename($image_name);
 
-       
+            if (move_uploaded_file($image_tmp, $target_path)) {
+                // Database ke liye relative path save karo
+                $db_path = "image/" . basename($image_name);
 
-// CONNECTING CATEGORIES WHICH WILL ADD PRODUCT IN THEIR  FOLLOWING CATEGORIED DIV 
-            $insert = "INSERT INTO products (name, image, description, price, category_id) 
-                       VALUES ('$name', '$image_name', '$description', '$price', '$cat_id')";
+                $insert = "INSERT INTO products (name, image, description, price, category_id) 
+                           VALUES ('$name', '$db_path', '$description', '$price', '$cat_id')";
 
-            if (mysqli_query($conn, $insert)) {
-                echo "<script>alert('Product added successfully!');</script>";
+                if (mysqli_query($conn, $insert)) {
+                    echo "<script>alert('Product added successfully!');</script>";
+                    echo "<script>window.location.href='product.php';</script>";
+                } else {
+                    echo "Error: " . mysqli_error($conn);
+                }
             } else {
-                echo "Error: " . $insert . "<br>" . mysqli_error($conn);
+                echo "<script>alert('Image upload failed!');</script>";
             }
-        
+        }
     }
-}
-?>
+    ?>
 
     <!-- Products List -->
     <h1>Products</h1>
-<div class="P-container">
-    <?php 
-    if (mysqli_num_rows($result) > 0) {
-        while ($rows = mysqli_fetch_assoc($result)){ ?>
-            <div class="p-card">
-                <img src="<?php echo $rows['image']; ?>" alt="Product">
-                <div class="card-body">
-                    <h5 class="card-title"><?php echo $rows['name']; ?></h5>
-                    <p class="card-text"><?php echo $rows['description']; ?></p>
-                    <p class="price">PKR <?php echo $rows['price']; ?></p>
-                    <a href="editpro.php?id=<?php echo $rows['id']; ?>" class="btn-edit">Edit</a>
-                    <a href="deletepro.php?id=<?php echo $rows['id']; ?>" class="btn-delete">Delete</a>
+    <div class="P-container">
+        <?php 
+        if (mysqli_num_rows($result) > 0) {
+            while ($rows = mysqli_fetch_assoc($result)){ ?>
+                <div class="p-card">
+                    <img src="../<?php echo $rows['image']; ?>" alt="Product">
+                    <div class="card-body">
+                        <h5 class="card-title"><?php echo $rows['name']; ?></h5>
+                        <p class="card-text"><?php echo $rows['description']; ?></p>
+                        <p class="price">PKR <?php echo $rows['price']; ?></p>
+                        <a href="editpro.php?id=<?php echo $rows['id']; ?>" class="btn-edit">Edit</a>
+                        <a href="deletepro.php?id=<?php echo $rows['id']; ?>" class="btn-delete">Delete</a>
+                    </div>
                 </div>
-            </div>
-        <?php }
-    } else {
-        echo "<p class='no-products'>No products found in this category.</p>";
-    }
-    ?>
-</div>
+            <?php }
+        } else {
+            echo "<p class='no-products'>No products found in this category.</p>";
+        }
+        ?>
+    </div>
 </div>
 
 <!-- Bootstrap JS -->

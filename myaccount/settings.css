@@ -1,0 +1,362 @@
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      background: #f4f4f4;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 220px;
+      /* Sidebar width fix */
+      background: #111;
+      color: #fff;
+      padding-top: 20px;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      /* Taake sidebar upar rahe */
+    }
+
+    .content {
+      margin-left: 220px;
+      /* Same as sidebar width */
+      padding: 20px;
+      background: #f9f9f9;
+      min-height: 100vh;
+      /* Full height */
+    }
+
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      padding: 12px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #575757;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+
+
+    .form-control {
+      position: relative;
+      margin-top: 20px;
+      width: 300px;
+    }
+
+    .form-control input {
+      width: 100%;
+      padding: 12px 10px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      background: transparent;
+    }
+
+    .form-control label {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: #80868b;
+      font-size: 16px;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      background: white;
+      padding: 0 4px;
+    }
+
+    /* Focused or Filled Input */
+    .form-control input:focus {
+      border: 2px solid black;
+    }
+
+    .form-control input:focus+label,
+    .form-control input:valid+label {
+      top: -8px;
+      left: 8px;
+      font-size: 13px;
+      color: blue;
+    }
+
+
+    /* Chat container */
+    #help {
+      background: #111;
+      color: #fff;
+      height: fit-content;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      /* box chhota aur centered */
+      margin: 0 auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      font-family: Arial, sans-serif;
+    }
+
+    /* Chat box */
+    #chat-box {
+      background: #000;
+      padding: 12px;
+      border-radius: 10px;
+      height: 300px;
+      /* chhoti height */
+      overflow-y: auto;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    /* Chat bubbles */
+    .user-msg,
+    .ai-msg {
+      margin: 6px 0;
+      padding: 10px 14px;
+      border-radius: 18px;
+      max-width: 75%;
+      line-height: 1.4;
+    }
+
+    .user-msg {
+      background: #444;
+      color: #fff;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .ai-msg {
+      background: #1a1a1a;
+      color: #fff;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    /* Controls */
+    #chat-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      background: #222;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    #send-btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 20px;
+      background: #444;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #send-btn:hover {
+      background: #666;
+    }
+
+    /* Profile Settings Card */
+    #profile {
+      max-width: 450px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Headings */
+    #profile h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
+
+    /* Form Inputs */
+    #profile input[type="text"],
+    #profile input[type="email"] {
+      width: 80%;
+      padding: 10px 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    #profile input:focus {
+      border-color: #000;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Button */
+    #profile button {
+      background: #000;
+      color: #fff;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 50px;
+      /* oval shape */
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 15px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      transition: 0.3s;
+    }
+
+    #profile button:hover {
+      background: #333;
+    }
+
+    /* Profile Pic */
+    #profile img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #000;
+      transition: 0.3s;
+    }
+
+    #profile img:hover {
+      transform: scale(1.05);
+    }
+
+
+
+
+    .policy-box h4 {
+      margin-top: 15px;
+      color: #333;
+      font-size: 18px;
+    }
+
+    .policy-box p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 10px rgba(17, 17, 17, 0.1);
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    #track-order-btn {
+      background: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+    #track-order-btn:hover {
+      background: #333;
+    }
+
+    .toggle-eye {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #888;
+    }
+
+    .toggle-eye:hover {
+      color: #000;
+    }
+
+    .faq-item {
+      margin-bottom: 10px;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 10px;
+      background: #f4f4f4;
+      border-radius: 8px;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    #update_password{
+        background: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    
+    #update_password:hover{
+        background-color: #333;
+    }

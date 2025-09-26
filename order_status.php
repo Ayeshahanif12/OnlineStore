@@ -17,7 +17,19 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Status</title>
   <link rel="shortcut icon" href="" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
+    a {
+      text-decoration: none;
+      color: white;
+      font-size: 20px;
+    }
+
+    li {
+      list-style: none;
+    }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -164,6 +176,29 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
 </head>
 
 <body>
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-dark p-4">
+      <span class="text-muted"></span>
+      <ul>
+        <li> <a class="links" href="index.php">Home</a></li>
+        <li class="nav-item">
+          <a class="links" href="index.php">Categories</a>
+        </li>
+        <li> <a class="links" href="index.php">Policy</a> </li>
+        <li> <a class="links" href="index.php">Contact us</a> </li>
+        <li> <a class="links" href="http://localhost/clothing%20store/myaccount/settings.php">Settings</a> </li>
+    </div>
+  </div>
+  </ul>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false"
+        aria-label="Toggle navigation" style="background-color: transparent; border: none;">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
   <div class="container">
 
     <div class="thank-you">
@@ -175,6 +210,7 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
       <div class="order-status">
         <h2>Customer Information</h2>
         <p class="order-id">Order #<?= $checkout['id'] ?></p>
+        <p style="color:black; font-size: 17px;" class="order-id">Placed On : <?= $checkout['created_at'] ?></p>
 
         <div class="info-grid">
           <p><strong>First Name:</strong> <?= $checkout['first_name'] ?></p>
@@ -194,15 +230,16 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
         <h2>Order Details</h2>
         <?php
         $order_items = mysqli_query($conn, "SELECT * FROM order_items WHERE order_id='{$checkout['id']}'");
+        $grand_total = 0; // total store karne ke liye
         while ($rows = mysqli_fetch_assoc($order_items)) {
-          $status = strtolower($rows['order_status']); // convert to lowercase
-          $statusClass = "status-pending"; // default
-          if ($status === "processing")
-            $statusClass = "status-processing";
-          if ($status === "completed")
-            $statusClass = "status-completed";
-          if ($status === "cancelled")
-            $statusClass = "status-cancelled";
+          $status = strtolower($rows['order_status']);
+          $statusClass = "status-pending";
+          if ($status === "processing") $statusClass = "status-processing";
+          if ($status === "completed") $statusClass = "status-completed";
+          if ($status === "cancelled") $statusClass = "status-cancelled";
+
+          // grand total add karo
+          $grand_total = $rows['total'];
           ?>
           <div class="product-box">
             <p><strong>Product:</strong> <?= $rows['product_name'] ?></p>
@@ -211,13 +248,20 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
                 style="border-radius:8px; border:1px solid #ddd; padding:3px;">
             </p>
             <p><strong>Quantity:</strong> <?= $rows['qty'] ?></p>
-            <p><strong>Total Price:</strong> PKR <?= $rows['total'] ?></p>
+            <p><strong>Price:</strong> PKR <?= $rows['price'] ?></p>
             <span class="status-badge <?= $statusClass ?>"><?= ucfirst($status) ?></span>
           </div>
-        <?php } ?>
-      <?php } ?>
+        <?php } ?> <!-- order_items loop close -->
 
-    </div>
+        <!-- grand total neeche ek hi baar show hoga -->
+        <h4 style="margin-top:20px; color:#000;">Total Price: PKR <?= $grand_total ?></h4>
+      </div> <!-- order-status close -->
+    <?php } ?> <!-- checkouts loop close -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
 </body>
 
 </html>
