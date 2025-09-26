@@ -1,0 +1,33 @@
+# Node.js dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Log files
+*.log
+
+# OS system files
+.DS_Store
+Thumbs.db
+
+# PHP specific
+/vendor/
+*.cache
+*.session
+
+# Ignore images (optional, tum chaho to enable karo)
+image/
+
+# IDE/editor specific
+.vscode/
+.idea/
+
+# Compiled files
+*.exe
+*.dll
+*.obj
+
+# Backup files
+*.bak
+*.tmp
