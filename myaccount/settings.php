@@ -269,23 +269,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['track-order-btn'])) {
     </div>
 
     <!-- Shipping -->
-    <div id="shipping" style="width:364px; margin-top: 145px; height: 300px;"
-      class="section <?php echo $activeSection === 'shipping' ? 'active' : ''; ?>">
-      <h2 style="text-align: center; margin-top:15px;">TRACK YOUR ORDER</h2>
-      <form action="" method="POST">
-        <div class="form-control">
-          <input type="text" id="order_id" name="order_id" required>
-          <label for="order_id">Order ID</label>
+<div id="shipping" style="width:364px; margin-top: 145px; height: auto; padding:20px;"
+     class="section <?php echo $activeSection === 'shipping' ? 'active' : ''; ?>">
+    <h2 style="text-align: center; margin-top:15px;">TRACK YOUR ORDER</h2>
+
+    <form action="" method="POST">
+        <div class="form-control" style="margin-bottom:15px;">
+            <input type="text" id="order_id" name="order_id" required style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+            <label for="order_id">Order ID</label>
         </div>
-        <button type="submit" id="track-order-btn" name="track-order-btn">Track Order</button>
-      </form>
-      <?php if (isset($orderStatus)) { ?>
-        <div>
-          <h3>Order Status</h3>
-          <p><?php echo htmlspecialchars($orderStatus); ?></p>
+        <button type="submit" id="track-order-btn" name="track-order-btn"
+                style="padding:10px 20px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer;">
+            Track Order
+        </button>
+    </form>
+
+    <?php if (isset($orderStatus) && !empty($orderStatus)) { ?>
+        <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+            <h3 style="color:#007bff; border-bottom:2px solid #007bff; padding-bottom:5px;">Order Status</h3>
+
+            <?php foreach ($orderStatus as $item) { ?>
+                <div style="margin-bottom:12px; padding:10px; border:1px solid #ddd; border-radius:6px; background:#fff;">
+                    <p><strong>Product:</strong> <?= htmlspecialchars($item['product_name']) ?></p>
+                    <p><strong>Status:</strong> 
+                        <span style="font-weight:bold; color:
+                            <?= $item['order_status'] == 'completed' ? 'green' :
+                               ($item['order_status'] == 'processing' ? 'orange' :
+                               ($item['order_status'] == 'cancelled' ? 'red' : 'blue')) ?>;">
+                            <?= ucfirst($item['order_status']) ?>
+                        </span>
+                    </p>
+                </div>
+            <?php } ?>
         </div>
-      <?php } ?>
-    </div>
+    <?php } ?>
+</div>
 
     <!-- Privacy -->
     <div id="privacy" style="margin-top: 20px; width: 600px; border-radius:20px;"
