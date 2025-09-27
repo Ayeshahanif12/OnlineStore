@@ -64,23 +64,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current_password'])) 
 }
 
 // Handle order tracking
+// ... [Existing code for Password Update] ...
+
+// Handle order tracking - CORRECTED AND SAFE LOGIC (TOP OF FILE)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['track-order-btn'])) {
+
+  // Initialize $orderStatus as an empty array before processing
+  $orderStatus = [];
+
   if (!empty($_POST['order_id'])) {
     $orderId = mysqli_real_escape_string($conn, $_POST['order_id']);
-    $orderQuery = "SELECT order_status FROM order_items WHERE order_id = '$orderId' AND user_id = $userId";
+
+    // QUERY: Select all necessary fields for the display loop.
+    $orderQuery = "SELECT product_name, order_status FROM order_items WHERE order_id = '$orderId' AND user_id = $userId";
     $orderResult = mysqli_query($conn, $orderQuery);
 
     if ($orderResult && mysqli_num_rows($orderResult) > 0) {
-      $order = mysqli_fetch_assoc($orderResult);
-      $orderStatus = $order['order_status']; // fixed field
+      // SUCCESS: Collect all rows into the $orderStatus array
+      while ($row = mysqli_fetch_assoc($orderResult)) {
+        $orderStatus[] = $row;
+      }
     } else {
-      $orderStatus = "❌ No order found with this ID.";
+      // ERROR: Order not found. Define $orderStatus as an array 
+      $orderStatus = [
+        ['order_status' => 'message', 'text' => '❌ No order found with this ID or it does not belong to your account.']
+      ];
     }
   } else {
-    $orderStatus = "⚠️ Please enter an Order ID.";
+    // WARNING: Empty Order ID. Define $orderStatus as an array 
+    $orderStatus = [
+      ['order_status' => 'message', 'text' => '⚠️ Please enter an Order ID.']
+    ];
   }
+
+  // Ensure the shipping section is active after submission
   $activeSection = 'shipping';
 }
+
+// GLOBAL INITIALIZATION: This MUST be placed before the HTML starts.
+if (!isset($orderStatus)) {
+  $orderStatus = [];
+}
+?>
+
+<!DOCTYPE html>
 ?>
 
 <!DOCTYPE html>
@@ -184,6 +211,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['track-order-btn'])) {
       padding-right: 10px;
       /* scrollbar ke liye space */
     }
+
+    #shipping {
+      overflow: auto;
+
+    }
   </style>
 </head>
 
@@ -254,6 +286,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['track-order-btn'])) {
           <label for="confirm_password">Confirm Password</label>
           <i class="fa fa-eye toggle-eye" onclick="togglePassword('confirm_password', this)"></i>
         </div>
+      <a href="http://localhost/clothing%20store/myaccount/forget_password.php">Forgot Password</a>
+
         <button style="margin-left:80px;" type="submit" id="update_password" name="update_password">Update
           Password</button>
       </form>
@@ -269,42 +303,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['track-order-btn'])) {
     </div>
 
     <!-- Shipping -->
-<div id="shipping" style="width:364px; margin-top: 145px; height: auto; padding:20px;"
-     class="section <?php echo $activeSection === 'shipping' ? 'active' : ''; ?>">
-    <h2 style="text-align: center; margin-top:15px;">TRACK YOUR ORDER</h2>
+    <div id="shipping" style="width:364px; margin-top: 15px; height: auto; padding:20px;"    
+      class="section <?php echo $activeSection === 'shipping' ? 'active' : ''; ?>">
+      <h2 style="text-align: center; margin-top:15px;">TRACK YOUR ORDER</h2>
 
-    <form action="" method="POST">
+      <form action="" method="POST">
         <div class="form-control" style="margin-bottom:15px;">
-            <input type="text" id="order_id" name="order_id" required style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-            <label for="order_id">Order ID</label>
-        </div>
-        <button type="submit" id="track-order-btn" name="track-order-btn"
-                style="padding:10px 20px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer;">
-            Track Order
-        </button>
-    </form>
+          <input type="text" id="order_id" name="order_id" required
+            style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+          <label for="order_id">Order ID</label>
+          </div>
+        <button type="submit" id="track-order-btn" name="track-order-btn"                
+          style="padding:10px 20px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer;">
+          Track Order
+          </button>
+        </form>
 
-    <?php if (isset($orderStatus) && !empty($orderStatus)) { ?>
-        <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-            <h3 style="color:#007bff; border-bottom:2px solid #007bff; padding-bottom:5px;">Order Status</h3>
+      <?php if (isset($orderStatus) && !empty($orderStatus)) { ?>
+        <div
+          style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); max-height: 250px; overflow-y: auto;">
+          <h3 style="color:#007bff; border-bottom:2px solid #007bff; padding-bottom:5px;">Order Status</h3>
 
-            <?php foreach ($orderStatus as $item) { ?>
-                <div style="margin-bottom:12px; padding:10px; border:1px solid #ddd; border-radius:6px; background:#fff;">
-                    <p><strong>Product:</strong> <?= htmlspecialchars($item['product_name']) ?></p>
-                    <p><strong>Status:</strong> 
-                        <span style="font-weight:bold; color:
-                            <?= $item['order_status'] == 'completed' ? 'green' :
-                               ($item['order_status'] == 'processing' ? 'orange' :
-                               ($item['order_status'] == 'cancelled' ? 'red' : 'blue')) ?>;">
-                            <?= ucfirst($item['order_status']) ?>
-                        </span>
-                    </p>
-                </div>
-            <?php } ?>
-        </div>
-    <?php } ?>
-</div>
+          <?php foreach ($orderStatus as $item) { ?>
+            <div
+              style="margin-bottom:12px; padding:10px; border:1px solid #ddd; border-radius:6px; background:#fff;">
+          
+              <?php if ($item['order_status'] === 'message') { ?>
+                <p style="font-weight:bold; color:red; margin:0;">
+                  <?= htmlspecialchars($item['text']) ?></p>
+              <?php } else { ?>
+                <p><strong>Product:</strong>
+                  <?= htmlspecialchars($item['product_name']) ?></p>
+                <p><strong>Status:</strong>
+                  <?php
+                  // 1. Colour define karein
+                  $status_color = 'blue'; // Default color
+                  if ($item['order_status'] == 'completed') {
+                    $status_color = 'green';
+                  } elseif ($item['order_status'] == 'processing') {
+                    $status_color = 'orange';
+                  } elseif ($item['order_status'] == 'cancelled') {
+                    $status_color = 'red';
+                  }
+                  ?>
+                  <span style="font-weight:bold; color:<?= $status_color ?>;">
 
+                    <?php
+                    // 2. Check karein ki ye 'message' hai ya actual status
+                    if ($item['order_status'] === 'message') {
+                      // Agar message hai, toh kuch display na karein kyunki message upar dikh chuka hai
+                      // Ya agar aapko sirf message hi dikhana hai toh isko yahan se hata dein
+                    } else {
+                      // Actual status ko display karein
+                      echo ucfirst($item['order_status']);
+                    }
+                    ?>
+                  </span>
+                </p>
+              <?php } ?>
+              </div>
+          <?php } ?>
+          </div>
+      <?php } ?>
+    </div>
     <!-- Privacy -->
     <div id="privacy" style="margin-top: 20px; width: 600px; border-radius:20px;"
       class="section <?php echo $activeSection === 'privacy' ? 'active' : ''; ?>">
