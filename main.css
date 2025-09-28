@@ -68,29 +68,6 @@ nav h1 {
     color: #ff4081;
 }
 
-/* Search Bar Hover Effect */
-.search-container {
-    position: relative;
-    display: inline-block;
-}
-
-.search-bar {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    width: 200px;
-    height: 30px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-    background-color: white;
-    display: none;
-}
-
-.search-container:hover .search-bar {
-    display: block;
-}
-
 .person-icon {
     position: relative;
     /* Ensures the hover effect works */
@@ -654,6 +631,7 @@ span {
 }
 
 input {
+
     height: 60px;
     margin-bottom: 20px;
     border-radius: 0;
@@ -684,4 +662,46 @@ input::placeholder {
 
 #create:hover {
     background-color: #111;
+}
+
+/* Search Box Fix */
+.search-container {
+    position: relative;
+}
+
+.search-box {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    position: absolute;
+    top: 45px; /* Position below the navbar */
+    right: 0;
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    z-index: 2000;
+}
+
+.search-box.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#suggestionsBox {
+    position: absolute;
+    top: 55px; /* Below the input */
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    z-index: 2001;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 0 0 8px 8px;
 }

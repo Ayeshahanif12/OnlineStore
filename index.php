@@ -8,12 +8,23 @@ if (!isset($_SESSION["role"]) == 'user') {
 }
 
 
-
-
 $conn = mysqli_connect("localhost", "root", "", "clothing_store");
 if (!$conn) {
   die("Database connection failed: " . mysqli_connect_error());
 }
+
+$user_id = $_SESSION['user_id'] ?? 0;
+
+// ====== REMOVE ITEM ======
+if (isset($_POST['remove_id'])) {
+  $remove_id = $_POST['remove_id'];
+  mysqli_query($conn, "DELETE FROM cart WHERE product_id='$remove_id' AND user_id='$user_id'");
+}
+
+
+
+
+
 $searchResults = [];
 if (isset($_GET['search']) && !empty($_GET['search'])) {
   $search = mysqli_real_escape_string($conn, $_GET['search']);
@@ -55,6 +66,7 @@ if (isset($_POST['add_to_cart'])) {
       mysqli_query($conn, "UPDATE cart 
                              SET qty = '$newQty', total = '$newTotal' 
                              WHERE product_id = '$id'");
+
     } else {
       $total = $price * 1;
       mysqli_query($conn, "INSERT INTO cart (user_id,product_id, name, price, image, qty, total) 
@@ -78,10 +90,7 @@ if (isset($_POST['remove_id'])) {
 }
 ?>
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
+
 $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
 ?>
@@ -321,22 +330,32 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       }
     }
 
+    /* SEARCH BOX FIX */
     .search-box {
       display: none;
       position: absolute;
       top: 70px;
-      /* navbar ke neeche show karega */
-      right: 0;
+      /* Navbar ke neeche show hoga */
+      right: 20px;
+      /* Right side me (icons ke neeche) */
       background: #fff;
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      min-width: 350px;
-      z-index: 1000;
+      width: 300px;
+      /* Width fix */
+      z-index: 2000;
+      /* Sabse upar */
     }
 
     .search-box.active {
       display: block;
+    }
+
+
+    .nav h1 {
+      margin: 0;
+      text-align: center;
     }
 
     .badge {
@@ -344,6 +363,19 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       padding: 4px 7px;
       border: 2px solid #121212;
       /* black border so badge looks clean */
+    }
+
+    .type {
+      display: none;
+      position: absolute;
+      top: 11%;
+      left: 111px;
+      background-color: #333;
+      border-radius: 24px;
+      /* or white if your theme is white */
+      padding: 10px 0;
+      z-index: 999;
+      min-width: 200px;
     }
   </style>
 </head>
@@ -386,75 +418,112 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   <nav class="navbar navbar-dark" style="background-color:#121212; height:70px; padding:0 20px; position:relative;">
     <h1 style="color:white; margin:0; text-align: center;">Trendy Wear</h1>
 
-    <div class="d-flex align-items-center ms-auto">
-
-      <!-- Search Wrapper -->
-      <div class="search-wrapper position-relative">
-        <!-- Search Icon -->
+    <div class="icons d-flex align-items-center ms-auto">
+      <!-- Search -->
+      <div class="search-container">
         <i class="bi bi-search text-white fs-5" id="openSearch" style="cursor:pointer;"></i>
-
-        <!-- Search Box -->
-        <div class="search-box" id="searchBox" style="height: 50px;">
-          <form method="GET" action="index.php" class="d-flex w-100" style="height: 34px;">
-            <input style="height: 40px;" type="text" class="form-control" name="search"
-              placeholder="Search by ID or Name..."
-              value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-            <button type="button" class="btn btn-sm btn-dark ms-2" id="closeSearch">
-              <i class="bi bi-x-lg"></i>
-            </button>
-          </form>
+        <div class="search-box" id="searchBox" style="height: 51px;">
+            <form method="GET" action="index.php" class="d-flex">
+                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search..."  value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" style="height: 35px;">
+                <button type="button" style="height: 35px;" class="btn btn-sm btn-dark ms-2" id="closeSearch"><i class="bi bi-x-lg"></i></button>
+            </form>
+            <div id="suggestionsBox"></div>
         </div>
       </div>
+      <script>
+          document.getElementById("searchInput").addEventListener("keyup", function() {
+            let query = this.value.trim();
 
-      <!-- Shipping Icon -->
-      <a href="order_status.php" class="ms-3 text-white">
-        <i class="fa fa-truck fs-5"></i>
-      </a>
+            if (query.length > 0) {
+              fetch("search_suggestions.php?term=" + encodeURIComponent(query))
+                .then(res => res.json())
+                .then(data => {
+                  let box = document.getElementById("suggestionsBox");
+                  box.innerHTML = "";
 
-      <!-- Cart Icon -->
-      <button class="btn ms-3 position-relative" style="background:transparent; border:none;" type="button"
-        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                  if (data.length > 0) {
+                    data.forEach(item => {
+                      let div = document.createElement("div");
+                      div.style.display = "flex";
+                      div.style.alignItems = "center";
+                      div.style.padding = "5px";
+                      div.style.cursor = "pointer";
 
-        <!-- Cart Icon -->
-        <i class="fa fa-shopping-cart text-white fs-5"></i>
+                      div.innerHTML = `
+              <img src="${item.image}" width="30" height="30" style="border-radius:5px; margin-right:10px;">
+              <span>${item.name}</span>
+            `;
 
-        <!-- Badge -->
-        <?php
-        $cartCount = 0;
-        $result = mysqli_query($conn, "SELECT COUNT(*) AS totalItems FROM cart");
-        if ($result) {
-          $row = mysqli_fetch_assoc($result);
-          $cartCount = $row['totalItems'] ?? 0;
-        }
-        ?>
+                      // Jab click karo to search box fill ho jaye
+                      div.addEventListener("click", function () {
+                        document.getElementById("searchInput").value = item.name;
+                        box.style.display = "none";
+                        // Submit form automatically
+                        document.querySelector(".search-box form").submit();
+                      });
 
-        <?php if ($cartCount > 0): ?>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            <?php echo $cartCount; ?>
-          </span>
-        <?php endif; ?>
-      </button>
+                      box.appendChild(div);
+                    });
+                    box.style.display = "block";
+                  } else {
+                    box.style.display = "none";
+                  }
+                });
+            } else {
+              document.getElementById("suggestionsBox").style.display = "none";
+            }
+          });
+        </script>
 
-      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasRightLabel">My Cart</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+        <!-- Shipping Icon -->
+        <a href="order_status.php" class="ms-3 text-white">
+          <i class="fa fa-truck fs-5"></i>
+        </a>
 
-          </button>
-        </div>
-        <div class="offcanvas-body" id="cartItems">
+        <!-- Cart -->
+        <button class="btn ms-3 position-relative" style="background:transparent; border:none;" type="button"
+          data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
 
+          <!-- Cart Icon -->
+          <i class="fa fa-shopping-cart text-white fs-5"></i>
 
-
+          <!-- Badge -->
           <?php
+          $cartCount = 0;
+          $result = mysqli_query($conn, "SELECT COUNT(*) AS totalItems FROM cart WHERE user_id = '$user_id'");
+          if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $cartCount = $row['totalItems'] ?? 0;
+          }
+          ?>
 
-          $result = mysqli_query($conn, "SELECT * FROM cart");
-          $total = 0;
-          if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-              $subtotal = $row['total'];
-              $total += $subtotal;
-              echo "
+          <?php if ($cartCount > 0): ?>
+            <span class="position-absolute top-2 start-101 translate-middle badge rounded-pill bg-danger">
+              <?php echo $cartCount; ?>
+            </span>
+          <?php endif; ?>
+        </button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">My Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+
+            </button>
+          </div>
+          <div class="offcanvas-body" id="cartItems">
+
+
+
+            <?php
+            $total = 0;
+
+            $result = mysqli_query($conn, "SELECT * FROM cart WHERE user_id = '$user_id'");
+            if (mysqli_num_rows($result) > 0) {
+              while ($row = mysqli_fetch_assoc($result)) {
+                $subtotal = $row['total'];
+                $total += $subtotal;
+                echo "
 <div class='cart-item d-flex align-items-center mb-3'>
   <img src='{$row['image']}' width='50' class='me-2'>
   <div class='flex-grow-1'>
@@ -470,22 +539,23 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 </div>
 
     ";
+              }
+              echo "<hr><h5>Total: PKR $total</h5>";
+            } else {
+              echo "<p>Your cart is empty.</p>";
             }
-            echo "<hr><h5>Total: PKR $total</h5>";
-          } else {
-            echo "<p>Your cart is empty.</p>";
-          }
-          ?>
+            ?>
 
-        </div>
+          </div>
 
-        <div style="text-align: center; margin: 20px;">
-          <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
-          <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
-        </div>
+          <div style="text-align: center; margin: 20px;">
+            <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
+            <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
+          </div>
 
 
 
+    </div>
   </nav>
   <script>
     const openSearch = document.getElementById("openSearch");
@@ -600,7 +670,7 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     }
   }
   ?>
-
+  <!-- SEARCH BOX CARD -->
   <?php if (isset($_GET['search'])): ?>
     <div style="margin:20px;">
       <h3 style="color:#121212;">Search Results:</h3>
@@ -887,12 +957,13 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   <div class="footer">
     <p style="margin-top: 13px; font-size: 26px;">&#169; trendywear copyright 2024</p>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     if (window.location.hash === "#openCart") {
@@ -902,4 +973,3 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   });
 
 </script>
-<script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

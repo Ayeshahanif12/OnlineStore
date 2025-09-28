@@ -172,6 +172,57 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
       /* purple */
       color: #fff;
     }
+
+    .links {
+      font-size: 20px;
+      color: white;
+      text-transform: capitalize;
+      text-decoration: none;
+      display: inline-block;
+      padding: 10px;
+      position: relative;
+    }
+
+    .nav-item {
+      position: relative;
+      list-style: none;
+    }
+
+   .type {
+            display: none;
+            position: absolute;
+            top: 11%;
+            left: 111px;
+            background-color: #333;
+            border-radius: 24px;
+            /* or white if your theme is white */
+            padding: 10px 0;
+            z-index: 999;
+            min-width: 200px;
+        }
+
+
+    .nav-item:hover .type {
+      display: block;
+    }
+
+    .type li {
+      list-style: none;
+    }
+
+    .type li a {
+      display: block;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-weight: 300;
+      font-size: 17px;
+    }
+
+    .type li a:hover {
+      background-color: grey;
+      color: white;
+    }
   </style>
 </head>
 
@@ -183,6 +234,16 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
         <li> <a class="links" href="index.php">Home</a></li>
         <li class="nav-item">
           <a class="links" href="index.php">Categories</a>
+          <ul class="type">
+
+
+            <?php
+            $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
+            while ($row = mysqli_fetch_assoc($category)) {
+              echo "<li><a href='#cart{$row['id']}'>{$row['name']}</a></li>";
+            }
+            ?>
+          </ul>
         </li>
         <li> <a class="links" href="index.php">Policy</a> </li>
         <li> <a class="links" href="index.php">Contact us</a> </li>
@@ -234,9 +295,12 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
         while ($rows = mysqli_fetch_assoc($order_items)) {
           $status = strtolower($rows['order_status']);
           $statusClass = "status-pending";
-          if ($status === "processing") $statusClass = "status-processing";
-          if ($status === "completed") $statusClass = "status-completed";
-          if ($status === "cancelled") $statusClass = "status-cancelled";
+          if ($status === "processing")
+            $statusClass = "status-processing";
+          if ($status === "completed")
+            $statusClass = "status-completed";
+          if ($status === "cancelled")
+            $statusClass = "status-cancelled";
 
           // grand total add karo
           $grand_total = $rows['total'];

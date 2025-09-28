@@ -89,6 +89,8 @@ VALUES
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <title>Checkout</title>
     <style>
         body {
@@ -267,10 +269,96 @@ VALUES
                 flex-direction: column;
             }
         }
+
+        .links {
+            font-size: 20px;
+            color: white;
+            text-transform: capitalize;
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px;
+            position: relative;
+        }
+
+        .nav-item {
+            position: relative;
+            list-style: none;
+        }
+
+        .type {
+            display: none;
+            position: absolute;
+            top: 11%;
+            left: 111px;
+            background-color: #333;
+            border-radius: 24px;
+            /* or white if your theme is white */
+            padding: 10px 0;
+            z-index: 999;
+            min-width: 200px;
+        }
+
+        .nav-item:hover .type {
+            display: block;
+        }
+
+        .type li {
+            list-style: none;
+        }
+
+        .type li a {
+            display: block;
+            color: white;
+            text-transform: capitalize;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: 300;
+            font-size: 17px;
+        }
+
+        .type li a:hover {
+            background-color: grey;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
+    <div class="collapse" id="navbarToggleExternalContent">
+        <div class="bg-dark p-4">
+            <span class="text-muted"></span>
+            <ul>
+                <li> <a class="links" href="index.php">Home</a></li>
+                <li class="nav-item">
+                    <a class="links" href="index.php">Categories</a>
+                    <ul class="type">
+
+
+                        <?php
+                        $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
+                        while ($row = mysqli_fetch_assoc($category)) {
+                            echo "<li><a href='#cart{$row['id']}'>{$row['name']}</a></li>";
+                        }
+                        ?>
+                    </ul>
+                </li>
+                <li> <a class="links" href="index.php">Policy</a> </li>
+                <li> <a class="links" href="index.php">Contact us</a> </li>
+                <li> <a class="links" href="http://localhost/clothing%20store/myaccount/settings.php">Settings</a> </li>
+        </div>
+    </div>
+    </ul>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation"
+                style="background-color: transparent; border: none;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
     <form action="" method="POST">
         <div class="checkout-container">
 
@@ -365,8 +453,8 @@ VALUES
                 if (!$conn) {
                     die("Database connection failed: " . mysqli_connect_error());
                 }
-
-                $sql = mysqli_query($conn, "SELECT * FROM cart");
+                $user_id = $_SESSION['user_id'];
+                $sql = mysqli_query($conn, "SELECT * FROM cart where user_id = ''");
 
                 $subtotal = 0;
                 while ($row = mysqli_fetch_assoc($sql)) {
@@ -409,6 +497,10 @@ VALUES
 
         </div>
     </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
+
 
 </html>

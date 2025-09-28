@@ -281,14 +281,14 @@ if (!isset($orderStatus)) {
           <label for="new_password">New Password</label>
           <i class="fa fa-eye toggle-eye" onclick="togglePassword('new_password', this)"></i>
         </div>
-        <div class="form-control">
+        <div style="margin-bottom: 21px;" class="form-control">
           <input type="password" id="confirm_password" name="confirm_password" required>
-          <label for="confirm_password">Confirm Password</label>
+          <label  for="confirm_password">Confirm Password</label>
           <i class="fa fa-eye toggle-eye" onclick="togglePassword('confirm_password', this)"></i>
         </div>
-      <a href="http://localhost/clothing%20store/myaccount/forget_password.php">Forgot Password</a>
+      <a href="http://localhost/clothing%20store/myaccount/forget_password.php" style="text-align: center;">Forgot Password?</a>
 
-        <button style="margin-left:80px;" type="submit" id="update_password" name="update_password">Update
+        <button style="margin-left:80px; " type="submit" id="update_password" name="update_password">Update
           Password</button>
       </form>
       <?php if (isset($passwordMsg)) { ?>

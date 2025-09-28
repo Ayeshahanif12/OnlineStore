@@ -1,0 +1,36 @@
+# Ignore environment variables
+.env
+
+# Ignore Composer vendor directory
+/vendor/
+
+# Ignore node modules if using Node.js
+/node_modules/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/editor settings
+.vscode/
+.idea/
+
+# Ignore logs and cache
+*.log
+cache/
+tmp/
+
+# Ignore OS generated files
+*.swp
+*.swo
+
+# Ignore build artifacts
+/dist/
+build/
+
+# Ignore sensitive config files
+myaccount/config.php
+
+# Ignore other unnecessary files
+*.bak
+*.tmp
