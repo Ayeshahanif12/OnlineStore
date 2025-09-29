@@ -93,183 +93,232 @@ VALUES
 
     <title>Checkout</title>
     <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #4a4a4a;
+            --accent-color: #007bff;
+            --background-color: #f4f5f7;
+            --surface-color: #ffffff;
+            --border-color: #e1e4e8;
+            --text-color: #24292e;
+            --text-muted-color: #586069;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background: #f9f9f9;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
         .checkout-container {
             display: flex;
             max-width: 1200px;
-            margin: 20px auto;
-            gap: 20px;
+            margin: 40px auto;
+            gap: 30px;
+            padding: 0 20px;
         }
 
-        /* Left Section */
+        /* Left Section: Form */
         .checkout-form {
             flex: 2;
-            background: #fff;
-            padding: 20px;
-            border-radius: 6px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .checkout-form h3 {
-            margin-bottom: 10px;
-            font-size: 18px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-section {
+            background-color: var(--surface-color);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
             font-size: 14px;
-            margin-bottom: 5px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-muted-color);
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: #fff;
-            font-size: 14px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #fff;
+            font-size: 15px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .shipping-method,
-        .payment-method,
-        .billing-address {
-            margin-top: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #fafafa;
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
         }
 
         .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .radio-option:has(input:checked) {
+            background-color: rgba(0, 123, 255, 0.05);
+            border-color: var(--accent-color);
         }
 
         .radio-option input {
-            margin-right: 8px;
+            margin-right: 12px;
+            accent-color: var(--accent-color);
         }
 
-        /* Right Section */
+        /* Right Section: Summary */
         .order-summary {
             flex: 1;
-            background: #fff;
-            padding: 20px;
-            border-radius: 6px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: var(--surface-color);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             height: fit-content;
         }
 
         .order-summary h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
         .product-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 15px;
+            font-size: 15px;
         }
 
         .product-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
         .product-info img {
-            height: 50px;
-            width: 50px;
+            height: 55px;
+            width: 55px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
 
         .summary-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: var(--text-muted-color);
+        }
+
+        .summary-item span:last-child {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .order-summary hr {
+            border: 0;
+            border-top: 1px solid var(--border-color);
+            margin: 20px 0;
         }
 
         .total {
-            font-weight: bold;
-            font-size: 16px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text-color);
         }
 
         .discount-code {
             display: flex;
-            margin: 10px 0;
+            margin-bottom: 20px;
         }
 
         .discount-code input {
             flex: 1;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px 0 0 4px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-right: none;
+            border-radius: 6px 0 0 6px;
         }
 
         .discount-code button {
-            padding: 8px 12px;
+            padding: 10px 15px;
             border: none;
-            background: #0070f3;
-            color: #fff;
+            background-color: #eef0f2;
+            color: var(--text-muted-color);
             cursor: pointer;
-            border-radius: 0 4px 4px 0;
+            border-radius: 0 6px 6px 0;
+            font-weight: 500;
         }
 
         .pay-btn {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: none;
-            background: #0070f3;
+            background-color: var(--primary-color);
             color: white;
             font-size: 16px;
-            border-radius: 4px;
+            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
             margin-top: 15px;
+            transition: background-color 0.2s;
         }
 
         .pay-btn:hover {
-            background: #005bb5;
+            background-color: #333;
         }
 
-
-        .pay-btn:hover {}
-
         .footer-links {
-            margin-top: 15px;
-            font-size: 13px;
+            margin-top: 25px;
+            font-size: 12px;
             text-align: center;
+            color: var(--text-muted-color);
         }
 
         .footer-links a {
             margin: 0 8px;
-            color: #0070f3;
+            color: var(--text-muted-color);
             text-decoration: none;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .checkout-container {
-                flex-direction: column;
+                flex-direction: column-reverse;
             }
         }
 
+        /* Navbar Styles (from other pages) */
         .links {
             font-size: 20px;
             color: white;
@@ -364,13 +413,16 @@ VALUES
 
             <!-- Left Section -->
             <div class="checkout-form">
-                <h3>Contact</h3>
-                <div class="form-group">
-                    <label>Email or mobile phone number</label>
-                    <input name="contact" type="text" placeholder="Enter your email or phone">
+                <div class="form-section">
+                    <h3>Contact</h3>
+                    <div class="form-group">
+                        <label for="contact">Email or mobile phone number</label>
+                        <input id="contact" name="contact" type="text" placeholder="Enter your email or phone" required>
+                    </div>
                 </div>
 
-                <h3>Delivery</h3>
+                <div class="form-section">
+                <h3>Shipping Address</h3>
                 <div class="form-group">
                     <label>Country/Region</label>
                     <select name="country">
@@ -390,57 +442,57 @@ VALUES
 
                 <div class="form-group">
                     <input type="hidden" value="<?php echo $login_user; ?>" name="user_id" id="">
-                    <label>First Name</label>
-                    <input name="first_name" type="text">
+                    <label for="first_name">First Name</label>
+                    <input id="first_name" name="first_name" type="text" required>
                 </div>
                 <div class="form-group">
-                    <label>Last Name</label>
-                    <input name="last_name" type="text">
+                    <label for="last_name">Last Name</label>
+                    <input id="last_name" name="last_name" type="text" required>
                 </div>
                 <div class="form-group">
-                    <label>Address</label>
-                    <input name="address" type="text">
+                    <label for="address">Address</label>
+                    <input id="address" name="address" type="text" placeholder="Street and house number" required>
                 </div>
                 <div class="form-group">
-                    <label>Postal Code</label>
-                    <input name="postal_code" type="text">
+                    <label for="postal_code">Postal Code</label>
+                    <input id="postal_code" name="postal_code" type="text" required>
                 </div>
                 <div class="form-group">
-                    <label>Phone</label>
-                    <input name="phone" type="text">
+                    <label for="phone">Phone</label>
+                    <input id="phone" name="phone" type="text" placeholder="For order updates" required>
+                </div>
                 </div>
 
-                <div class="shipping-method">
-                    <h3>Shipping Method</h3>
-                    <p>Home Delivery — Rs.150</p>
-                </div>
-
-                <div name="card_method" class="payment-method">
+                <div class="form-section">
                     <h3>Payment</h3>
-                    <div class="radio-option">
-                        <input type="radio" name="payment" checked> PayFast (Debit/Credit/Wallet/Bank)
+                    <div class="radio-option" onclick="document.getElementById('payfast').checked = true;">
+                        <input type="radio" id="payfast" name="payment" value="PayFast" checked>
+                        <label for="payfast">PayFast (Debit/Credit/Wallet/Bank)</label>
                     </div>
-                    <div name="cod" class="radio-option">
-                        <input type="radio" name="payment"> Cash on Delivery (COD)
+                    <div class="radio-option" onclick="document.getElementById('cod').checked = true;">
+                        <input type="radio" id="cod" name="payment" value="COD">
+                        <label for="cod">Cash on Delivery (COD)</label>
                     </div>
                 </div>
 
-                <div name="billing" class="billing-address">
+                <div class="form-section">
                     <h3>Billing Address</h3>
-                    <div name="same_as_shipping" class="radio-option">
-                        <input type="radio" name="billing" checked> Same as shipping address
+                    <div class="radio-option" onclick="document.getElementById('same_billing').checked = true;">
+                        <input type="radio" id="same_billing" name="billing" value="same" checked>
+                        <label for="same_billing">Same as shipping address</label>
                     </div>
-                    <div name="different_billing" class="radio-option">
-                        <input type="radio" name="billing"> Use a different billing address
+                    <div class="radio-option" onclick="document.getElementById('diff_billing').checked = true;">
+                        <input type="radio" id="diff_billing" name="billing" value="different">
+                        <label for="diff_billing">Use a different billing address</label>
                     </div>
                 </div>
 
                 <button type="submit" name="ordernow" class="pay-btn">Order Now</button>
 
                 <div class="footer-links">
-                    <a href="#">Refund policy</a> |
-                    <a href="#">Shipping</a> |
-                    <a href="#">Privacy policy</a> |
+                    <a href="#">Refund policy</a>
+                    <a href="#">Shipping policy</a>
+                    <a href="#">Privacy policy</a>
                     <a href="#">Terms of service</a>
                 </div>
             </div>
@@ -454,7 +506,7 @@ VALUES
                     die("Database connection failed: " . mysqli_connect_error());
                 }
                 $user_id = $_SESSION['user_id'];
-                $sql = mysqli_query($conn, "SELECT * FROM cart where user_id = ''");
+                $sql = mysqli_query($conn, "SELECT * FROM cart where user_id = '$user_id'");
 
                 $subtotal = 0;
                 while ($row = mysqli_fetch_assoc($sql)) {
@@ -484,12 +536,14 @@ VALUES
                     <span><?php echo "PKR " . number_format($shipping, 2); ?></span>
                 </div>
 
+                <hr>
+
                 <div class="discount-code">
                     <input type="text" placeholder="Discount code">
                     <button>Apply</button>
                 </div>
 
-                <div class="summary-item total">
+                <div class="summary-item total" style="margin-top: 20px;">
                     <span>Total</span>
                     <span><?php echo "PKR " . number_format($grandTotal, 2); ?></span>
                 </div>

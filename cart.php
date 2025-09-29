@@ -1,37 +1,59 @@
 <?php
+session_start();
+
+// 1. Redirect user to login if they are not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
 $conn = mysqli_connect("localhost", "root", "", "clothing_store");
 if (!$conn) {
   die("DB failed: " . mysqli_connect_error());
 }
 
+// 2. Get the logged-in user's ID
+$user_id = $_SESSION['user_id'];
 
 // ✅ Update qty with plus/minus
 if (isset($_POST['update_qty'])) {
   $id = intval($_POST['product_id']);
   $action = $_POST['update_qty'];
 
-  // get current qty
-  $res = mysqli_query($conn, "SELECT qty FROM cart WHERE product_id=$id");
-  $row = mysqli_fetch_assoc($res);
-  $qty = $row['qty'];
+  // 3. Use prepared statements and scope to user_id
+  $stmt = mysqli_prepare($conn, "SELECT qty, price FROM cart WHERE product_id = ? AND user_id = ?");
+  mysqli_stmt_bind_param($stmt, "ii", $id, $user_id);
+  mysqli_stmt_execute($stmt);
+  $res = mysqli_stmt_get_result($stmt);
+  
+  if ($row = mysqli_fetch_assoc($res)) {
+    $qty = $row['qty'];
+    $price = $row['price'];
 
-  if ($action == "plus") {
-    $qty++;
-  } elseif ($action == "minus" && $qty > 1) {
-    $qty--;
+    if ($action == "plus") {
+      $qty++;
+    } elseif ($action == "minus" && $qty > 1) {
+      $qty--;
+    }
+
+    // 4. Also update the total price for the item
+    $new_total = $qty * $price;
+    $update_stmt = mysqli_prepare($conn, "UPDATE cart SET qty = ?, total = ? WHERE product_id = ? AND user_id = ?");
+    mysqli_stmt_bind_param($update_stmt, "idii", $qty, $new_total, $id, $user_id);
+    mysqli_stmt_execute($update_stmt);
   }
-
-  mysqli_query($conn, "UPDATE cart SET qty=$qty WHERE product_id=$id");
 }
 
 // Remove
 if (isset($_POST['remove_id'])) {
   $id = intval($_POST['remove_id']);
-  mysqli_query($conn, "DELETE FROM cart WHERE product_id=$id");
+  $stmt = mysqli_prepare($conn, "DELETE FROM cart WHERE product_id = ? AND user_id = ?");
+  mysqli_stmt_bind_param($stmt, "ii", $id, $user_id);
+  mysqli_stmt_execute($stmt);
 }
 
-// Fetch cart
-$cart = mysqli_query($conn, "SELECT * FROM cart");
+// Fetch cart for the specific user
+$cart = mysqli_query($conn, "SELECT * FROM cart WHERE user_id = '$user_id'");
 // ✅ Fetch categories
 $category = mysqli_query($conn, "SELECT * FROM nav_categories");
 ?>
@@ -401,7 +423,7 @@ textarea {
     <div class="bg-dark p-4">
       <span class="text-muted"></span>
       <ul>
-        <li> <a class="links" href="index.html">Home</a></li>
+        <li> <a class="links" href="index.php">Home</a></li>
         <li class="nav-item">
           <a class="links" href="#">Categories</a>
           <ul class="type">
@@ -437,7 +459,7 @@ textarea {
     echo "<table class='cart-table'>";
     echo "<tr><th></th><th>Product</th><th>Quantity</th><th>Total</th><th></th></tr>";
     while ($row = mysqli_fetch_assoc($cart)) {
-      $subtotal = $row['price'] * $row['qty'];
+      $subtotal = $row['total']; // Use the 'total' column from the database
       $total += $subtotal;
       echo "
           <tr>

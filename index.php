@@ -15,6 +15,16 @@ if (!$conn) {
 
 $user_id = $_SESSION['user_id'] ?? 0;
 
+// Check if the user has placed any orders
+$has_orders = false;
+if ($user_id > 0) {
+    $order_check_query = mysqli_query($conn, "SELECT id FROM checkout WHERE user_id = '$user_id' LIMIT 1");
+    if ($order_check_query && mysqli_num_rows($order_check_query) > 0) {
+        $has_orders = true;
+    }
+}
+
+
 // ====== REMOVE ITEM ======
 if (isset($_POST['remove_id'])) {
   $remove_id = $_POST['remove_id'];
@@ -476,9 +486,15 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
         </script>
 
         <!-- Shipping Icon -->
-        <a href="order_status.php" class="ms-3 text-white">
-          <i class="fa fa-truck fs-5"></i>
-        </a>
+        <?php if ($has_orders): ?>
+            <a href="order_status.php" class="ms-3 text-white">
+              <i class="fa fa-truck fs-5"></i>
+            </a>
+        <?php else: ?>
+            <a href="#" onclick="alert('First order please'); return false;" class="ms-3 text-white">
+              <i class="fa fa-truck fs-5"></i>
+            </a>
+        <?php endif; ?>
 
         <!-- Cart -->
         <button class="btn ms-3 position-relative" style="background:transparent; border:none;" type="button"
