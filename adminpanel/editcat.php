@@ -162,11 +162,14 @@ $image = $row['img'];
 
     <!-- Main Section -->
     <main class="main-section">
-      <form action="updatecat.php" method="post">
+      <form action="updatecat.php" method="post" enctype="multipart/form-data">
         <h2>Edit Category</h2>
         <input type="hidden" name="id" value="<?= $id ?>">
-        <input type="name" name="category_name" value="<?= $category_name ?>" placeholder="Enter Name" required>
-        <input type="file" name="image" name="image" >
+        <label>Current Image:</label>
+        <img src="image/<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($category_name) ?>" width="150" style="margin-bottom: 15px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+        <label for="image">Change Image (optional):</label>
+        <input type="file" name="image" id="image">
+        <input type="text" name="category_name" value="<?= htmlspecialchars($category_name) ?>" placeholder="Enter Name" required>
         <button type="submit">Update</button>
       </form>
     </main>

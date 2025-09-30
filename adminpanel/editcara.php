@@ -162,11 +162,14 @@ $alt_text = $row['alt_text'];
 
     <!-- Main Section -->
     <main class="main-section">
-      <form action="updatecara.php" method="post">
+      <form action="updatecara.php" method="post" enctype="multipart/form-data">
         <h2>Edit Carousel</h2>
         <input type="hidden" name="id" value="<?= $id ?>">
-               <input type="file" name="image" name="image" >
-
+        <label>Current Image:</label>
+        <img src="image/<?= htmlspecialchars($Carousel_image) ?>" alt="<?= htmlspecialchars($alt_text) ?>" width="150" style="margin-bottom: 15px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+        
+        <label for="image">Change Image (optional):</label>
+        <input type="file" name="image" id="image">
         <input type="text" name="alt_text" value="<?= $alt_text ?>" required>
         <button type="submit">Update</button>
       </form>

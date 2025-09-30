@@ -4,15 +4,21 @@ if (!$conn) {
   die("Database connection failed: " . mysqli_connect_error());
 }
 
-$id = $_GET['id'];
-$sql = "SELECT * FROM products WHERE id='$id'";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
+$id = (int)$_GET['id'];
 
-$image = $row['image'];
-$name = $row['name'];
-$description = $row['description'];
-$price = $row['price'];
+// Use prepared statement to prevent SQL injection
+$stmt = mysqli_prepare($conn, "SELECT * FROM products WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$row = mysqli_fetch_assoc($result);
+mysqli_stmt_close($stmt);
+
+$image = $row['image'] ?? '';
+$name = $row['name'] ?? '';
+$description = $row['description'] ?? '';
+$price = $row['price'] ?? '';
+$category_id = $row['category_id'] ?? 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -230,23 +236,26 @@ $price = $row['price'];
     <input type="hidden" name="id" value="<?= $id ?>">
 
     <label>Current Image</label>
-    <img src="image/<?= $image ?>" alt="Product Image">
+    <img src="../<?= htmlspecialchars($image) ?>" alt="Product Image" style="width: 150px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
     <label for="image">Change Image</label>
     <input type="file" name="image">
 
     <label for="name">Name</label>
-    <input type="text" name="name" id="name" value="<?= $name ?>" required>
+    <input type="text" name="name" id="name" value="<?= htmlspecialchars($name) ?>" required>
 
     <label for="description">Description</label>
-    <input type="text" name="description" id="description" value="<?= $description ?>" required>
+    <input type="text" name="description" id="description" value="<?= htmlspecialchars($description) ?>" required>
 
     <label for="price">Price</label>
-    <input type="text" name="price" id="price" value="<?= $price ?>" required>
+    <input type="text" name="price" id="price" value="<?= htmlspecialchars($price) ?>" required>
+    
+    <label for="category_id">Category</label>
     <select name="category_id" class="form-control mb-2" required>
       <?php
       $cats = mysqli_query($conn, "SELECT * FROM nav_categories");
       while ($cat = mysqli_fetch_assoc($cats)) {
-        echo "<option value='{$cat['id']}'>{$cat['name']}</option>";
+        $selected = ($cat['id'] == $category_id) ? 'selected' : '';
+        echo "<option value='{$cat['id']}' $selected>{$cat['name']}</option>";
       }
       ?>
     </select>

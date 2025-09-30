@@ -901,9 +901,8 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       <h3>MY ACCOUNT</h3>
       <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
-      <a href="signup.php">ACCOUNT INFO</a>
-      <a href="#">ORDER HISTORY</a>
-      <a href="#">ORDER HISTORY</a>
+      <a href="https://localhost/clothing%20store/myaccount/settings.php">SETTINGS</a>
+      <a href="https://localhost/clothing%20store/myaccount/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">

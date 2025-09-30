@@ -155,6 +155,18 @@ if (isset($_POST['create'])) {
     .alert-box {
       margin-bottom: 12px;
     }
+     .type {
+      display: none;
+      position: absolute;
+      top: 11%;
+      left: 111px;
+      background-color: #333;
+      border-radius: 24px;
+      /* or white if your theme is white */
+      padding: 10px 0;
+      z-index: 999;
+      min-width: 200px;
+    }
   </style>
 </head>
 
@@ -285,10 +297,10 @@ if (isset($_POST['create'])) {
 
     <div class="footercontainer">
       <h3>MY ACCOUNT</h3>
-      <a href="login.html">LOGIN</a>
+      <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
-      <a href="#">ACCOUNT INFO</a>
-      <a href="#">ORDER HISTORY</a>
+      <a href="http://localhost/clothing%20store/myaccount/settings.php">ACCOUNT INFO</a>
+      <a href="http://localhost/clothing%20store/myaccount/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">

@@ -50,6 +50,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <link rel="stylesheet" href="main.css">
 
+  <style>
+     .type {
+      display: none;
+      position: absolute;
+      top: 11%;
+      left: 111px;
+      background-color: #333;
+      border-radius: 24px;
+      /* or white if your theme is white */
+      padding: 10px 0;
+      z-index: 999;
+      min-width: 200px;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -130,11 +145,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="footercontainer">
       <h3>MY ACCOUNT</h3>
-      <a href="login.html">LOGIN</a>
-      <a href="signup.html">CREATE ACCOUNT</a>
-      <a href="signup.html">ACCOUNT INFO</a>
-      <a href="#">ORDER HISTORY</a>
-      <a href="#">ORDER HISTORY</a>
+      <a href="login.php">LOGIN</a>
+      <a href="signup.php">CREATE ACCOUNT</a>
+      <a href="http://localhost/clothing%20store/myaccount/settings.php">ACCOUNT INFO</a>
+      <a href="http://localhost/clothing%20store/myaccount/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">
