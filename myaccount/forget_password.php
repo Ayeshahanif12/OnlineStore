@@ -23,6 +23,10 @@ if (isset($_POST['send_otp'])) {
         // PHPMailer + SendGrid
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
         try {
+            // Enable verbose debug output
+            $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+            $mail->Debugoutput = 'html'; // Browser mein behtar view ke liye
+
             $mail->isSMTP();
             $mail->Host = MAIL_HOST;
             $mail->SMTPAuth = true;
@@ -42,7 +46,9 @@ if (isset($_POST['send_otp'])) {
             exit;
         } catch (Exception $e) {
             error_log("Mail error: " . $mail->ErrorInfo);
-            echo "<script>alert('Could not send email. Try again later.');</script>";
+            // User ko wazeh error message dikhayein
+            $errorMessage = "Could not send email. Mailer Error: " . $mail->ErrorInfo;
+            echo "<script>alert('" . addslashes($errorMessage) . "');</script>";
         }
     } else {
         echo "<script>alert('Email not found!');</script>";

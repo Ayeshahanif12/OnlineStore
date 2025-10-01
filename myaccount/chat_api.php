@@ -21,12 +21,13 @@ $faq = [
     "damage product" => "If you received a damaged product, share photos with support for a replacement/refund.",
 
     // Shipping
+    "delivery " => "Delivery takes 3-5 working days in cities and up to 7 days in remote areas." ,
     "shipping" => "We provide fast shipping all over Pakistan 🚚.",
     "delivery time" => "Delivery takes 3-5 working days in cities and up to 7 days in remote areas.",
     "shipping charges" => "We charge PKR 200. Free delivery on orders above PKR 3,000!",
 
     // Account
-    "login" => "Go to the 'Login' page and enter your email and password.",
+    "login" => "Go to the 'create account' page and enter your name, email and password.",
     "logout" => "Click the 'Logout' button in your account menu.",
     "sign in" => "Click 'Sign In' and enter your registered details.",
     "sign up" => "Click 'Sign Up' and create your account.",
