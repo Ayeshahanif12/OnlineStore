@@ -7,12 +7,24 @@ if (!$conn) {
 $id = $_GET['id'];
 $sql = "SELECT * FROM users WHERE id='$id'";
 $result = mysqli_query($conn, $sql);
+$id = (int)($_GET['id'] ?? 0); // Cast to integer for safety
+
+// Use prepared statements to prevent SQL Injection
+$stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 $row = mysqli_fetch_assoc($result);
+mysqli_stmt_close($stmt);
 
 $Fname = $row['fname'];
 $Lname = $row['lname'];
 $email = $row['email'];
 $password = $row['password'];
+$Fname = $row['fname'] ?? '';
+$Lname = $row['lname'] ?? '';
+$email = $row['email'] ?? '';
+$password = $row['password'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -109,42 +121,42 @@ $password = $row['password'];
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="http://localhost/clothing%20store/adminpanel/adminpage.php" class="nav-link active">
+        <a href="http://localhost/store/adminpanel/adminpage.php" class="nav-link active">
           <i class="bi bi-house-door-fill me-2"></i> Home
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/adminpanel/dashboard.php" class="nav-link">
+        <a href="http://localhost/store/adminpanel/dashboard.php" class="nav-link">
           <i class="bi bi-speedometer2 me-2"></i> Dashboard
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/adminpanel/order.php" class="nav-link">
+        <a href="http://localhost/store/adminpanel/order.php" class="nav-link">
           <i class="bi bi-table me-2"></i> Orders
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/products/product.php" class="nav-link">
+        <a href="http://localhost/store/products/product.php" class="nav-link">
           <i class="bi bi-grid me-2"></i> Products
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/adminpanel/user.php" class="nav-link">
+        <a href="http://localhost/store/adminpanel/user.php" class="nav-link">
           <i class="bi bi-people me-2"></i> Customers
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/adminpanel/category.php" class="nav-link">
+        <a href="http://localhost/store/adminpanel/category.php" class="nav-link">
           <i class="bi bi-tags me-2"></i> Categories
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/newsletter/fetchnewsletter.php" class="nav-link">
+        <a href="http://localhost/store/newsletter/fetchnewsletter.php" class="nav-link">
           <i class="bi bi-envelope me-2"></i> Newsletter
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/contactus/fetchmessages.php" class="nav-link">
+        <a href="http://localhost/store/contactus/fetchmessages.php" class="nav-link">
           <i class="bi bi-telephone me-2"></i> Contact Us
         </a>
       </li>
@@ -163,7 +175,7 @@ $password = $row['password'];
         <li>
           <hr class="dropdown-divider">
         </li>
-        <li><a class="dropdown-item" href="http://localhost/clothing%20store/login.php">Sign out</a></li>
+        <li><a class="dropdown-item" href="http://localhost/store/login.php">Sign out</a></li>
       </ul>
     </div>
   </div>

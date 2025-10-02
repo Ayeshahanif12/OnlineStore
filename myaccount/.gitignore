@@ -1,6 +1,17 @@
 # Ignore environment variables
 .env
 
+# Sensitive files
+myaccount/.env.txt
+config.php
+
+# Composer dependencies
+/vendor/
+
+# Log files
+*.log
+
+
 # Ignore Composer vendor directory
 /vendor/
 
