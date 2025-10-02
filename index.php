@@ -387,6 +387,11 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       z-index: 999;
       min-width: 200px;
     }
+
+    /* Mobile view mein navbar ko theek karne ke liye */
+    @media (max-width: 768px) {
+      .navbar-dark .icons { display: flex !important; }
+    }
   </style>
 </head>
 
@@ -425,8 +430,8 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     </div>
   </nav>
 
-  <nav class="navbar navbar-dark" style="background-color:#121212; height:70px; padding:0 20px; position:relative;">
-    <h1 style="color:white; margin:0; text-align: center;">Trendy Wear</h1>
+  <nav class="navbar navbar-dark" style="background-color:#121212; height:70px; padding:0 20px;">
+    <h1 style="color:white; margin:0 auto; text-align: center;">Trendy Wear</h1>
 
     <div class="icons d-flex align-items-center ms-auto">
       <!-- Search -->
