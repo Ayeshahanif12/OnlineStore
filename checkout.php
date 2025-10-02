@@ -393,7 +393,7 @@ VALUES
                 </li>
                 <li> <a class="links" href="index.php">Policy</a> </li>
                 <li> <a class="links" href="index.php">Contact us</a> </li>
-                <li> <a class="links" href="http://localhost/clothing%20store/myaccount/settings.php">Settings</a> </li>
+                <li> <a class="links" href="http://localhost/store/myaccount/settings.php">Settings</a> </li>
         </div>
     </div>
     </ul>

@@ -21,7 +21,7 @@ if (isset($_POST['reset'])) {
         $query = "UPDATE users SET password='$hashedPass' WHERE email='$email_safe'";
         if (mysqli_query($conn, $query)) {
             unset($_SESSION['otp'], $_SESSION['otp_time'], $_SESSION['verified'], $_SESSION['reset_email']);
-            echo "<script>alert('Password Updated!'); window.location.href='http://localhost/clothing%20store/login.php';</script>";
+            echo "<script>alert('Password Updated!'); window.location.href='http://localhost/store/login.php';</script>";
             exit;
         } else {
             echo "<script>alert('Database error.');</script>";

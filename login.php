@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['role'] = $user['role'];  // role session me save
 
     if ($user['role'] == "admin") {
-      header("Location: http://localhost/clothing%20store/adminpanel/adminpage.php");
+      header("Location: http://localhost/store/adminpanel/adminpage.php");
     } else {
       header("Location: index.php");
     }
@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </span>
       </div>
 <button id="create" name="login" style="margin-left: 5px;" class="btn btn-dark">login</button><br>
-      <a href="http://localhost/clothing%20store/myaccount/forget_password.php">Forgot Password</a>
+      <a href="http://localhost/store/myaccount/forget_password.php">Forgot Password</a>
       <a style="display: block;
         margin: 0 auto;
         width: fit-content;
@@ -147,8 +147,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <h3>MY ACCOUNT</h3>
       <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
-      <a href="http://localhost/clothing%20store/myaccount/settings.php">ACCOUNT INFO</a>
-      <a href="http://localhost/clothing%20store/myaccount/order_status.php">ORDER HISTORY</a>
+      <a href="http://localhost/store/myaccount/settings.php">ACCOUNT INFO</a>
+      <a href="http://localhost/store/myaccount/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">

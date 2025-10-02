@@ -191,7 +191,7 @@ if (isset($_POST['create'])) {
         </li>
         <li><a class="links text-white" href="#policy">Policy</a></li>
         <li><a class="links text-white" href="#contactus">Contact us</a></li>
-        <li><a class="links text-white" href="http://localhost/clothing%20store/myaccount/settings.php">Settings</a></li>
+        <li><a class="links text-white" href="http://localhost/store/myaccount/settings.php">Settings</a></li>
       </ul>
     </div>
   </div>
@@ -299,8 +299,8 @@ if (isset($_POST['create'])) {
       <h3>MY ACCOUNT</h3>
       <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
-      <a href="http://localhost/clothing%20store/myaccount/settings.php">ACCOUNT INFO</a>
-      <a href="http://localhost/clothing%20store/myaccount/order_status.php">ORDER HISTORY</a>
+      <a href="http://localhost/store/myaccount/settings.php">ACCOUNT INFO</a>
+      <a href="http://localhost/store/myaccount/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">

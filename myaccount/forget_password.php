@@ -2,8 +2,6 @@
 session_start();
 require 'config.php';
 require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
-require 'PHPMailer/Exception.php';
 
 $conn = mysqli_connect("localhost", "root", "", "clothing_store");
 if (!$conn) { die("Connection failed: " . mysqli_connect_error()); }
@@ -24,7 +22,7 @@ if (isset($_POST['send_otp'])) {
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
         try {
             // Enable verbose debug output
-            $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+            $mail->SMTPDebug = 0; // Production ke liye isay 0 kar dein
             $mail->Debugoutput = 'html'; // Browser mein behtar view ke liye
 
             $mail->isSMTP();
@@ -32,7 +30,7 @@ if (isset($_POST['send_otp'])) {
             $mail->SMTPAuth = true;
             $mail->Username = MAIL_USERNAME; // 'apikey'
             $mail->Password = MAIL_PASSWORD; // your SendGrid key
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
             $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
@@ -43,7 +41,7 @@ if (isset($_POST['send_otp'])) {
 
             $mail->send();
             echo "<script>alert('OTP sent to your email!'); window.location.href='verify_otp.php';</script>";
-            exit;
+            exit();
         } catch (Exception $e) {
             error_log("Mail error: " . $mail->ErrorInfo);
             // User ko wazeh error message dikhayein
@@ -132,7 +130,7 @@ if (isset($_POST['send_otp'])) {
       <input type="email" name="email" placeholder="Enter your registered email" required>
       <button type="submit" name="send_otp">Send OTP</button>
     </form>
-    <a href="http://localhost/clothing%20store/login.php" class="back-link">Back to Login</a>
+    <a href="http://localhost/store/login.php" class="back-link">Back to Login</a>
   </div>
 </body>
 </html>

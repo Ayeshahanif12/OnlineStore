@@ -445,7 +445,7 @@ if (!isset($orderStatus)) {
     <h2>Settings</h2>
     <div class="menu">
       <a href="#" onclick="showSection('profile', event)"><i class="fa fa-user"></i> Profile</a>
-      <a href="http://localhost/clothing%20store/index.php"><i class="fa fa-home"></i> Home</a>
+      <a href="http://localhost/store/index.php"><i class="fa fa-home"></i> Home</a>
       <a href="#" onclick="showSection('password', event)"><i class="fa fa-lock"></i> Password</a>
       <a href="#" onclick="showSection('shipping', event)"><i class="fa fa-truck"></i> Shipping</a>
       <a href="#" onclick="showSection('privacy', event)"><i class="fa fa-shield-alt"></i> Privacy</a>
@@ -453,7 +453,7 @@ if (!isset($orderStatus)) {
       <a href="#" onclick="showSection('help', event)"><i class="fa fa-life-ring"></i> Help</a>
     </div>
 
-    <a id="logout" href="http://localhost/clothing%20store/logout.php" class="btn btn-danger">Logout</a>
+    <a id="logout" href="http://localhost/store/logout.php" class="btn btn-danger">Logout</a>
   </div>
 
   <div class="content">
@@ -505,7 +505,7 @@ if (!isset($orderStatus)) {
           <input type="password" id="confirm_password" name="confirm_password" required>
           <i class="fa fa-eye toggle-eye" onclick="togglePassword('confirm_password', this)"></i>
         </div>
-        <a href="http://localhost/clothing%20store/myaccount/forget_password.php" style="display: block; text-align: center; margin-bottom: 15px;">Forgot Password?</a>
+        <a href="http://localhost/store/myaccount/forget_password.php" style="display: block; text-align: center; margin-bottom: 15px;">Forgot Password?</a>
         <button type="submit" class="form-button" name="update_password">Update Password</button>
       </form>
       <?php if (isset($passwordMsg)) { ?>
