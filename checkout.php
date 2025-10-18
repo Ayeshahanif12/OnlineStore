@@ -5,14 +5,7 @@ if (isset($_SESSION['user_id'])) {
     $login_user = $_SESSION['user_id'];
 }
 
-$conn = mysqli_connect('localhost', 'root', '', 'clothing_store');
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-
-
+require_once 'db_config.php';
 if (isset($_POST['ordernow'])) {
     $contact = $_POST['contact'];
     $country = $_POST['country'];
@@ -500,11 +493,7 @@ VALUES
             <!-- Right Section -->
             <div class="order-summary">
                 <h3>Order Summary</h3>
-                <?php
-                $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-                if (!$conn) {
-                    die("Database connection failed: " . mysqli_connect_error());
-                }
+                <?php                
                 $user_id = $_SESSION['user_id'];
                 $sql = mysqli_query($conn, "SELECT * FROM cart where user_id = '$user_id'");
 

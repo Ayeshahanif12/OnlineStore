@@ -5,11 +5,7 @@ if ($_SESSION['role'] != "admin") {
   exit();
 }
 
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
-
+require_once '../db_config.php';
 if (isset($_POST['add_category'])) {
   $image = $_FILES['image']['name'];
   $alt_text = $_POST['category_name'];
@@ -304,8 +300,6 @@ if (isset($_POST['add_category'])) {
   } else {
     echo "<p>No carousel found.</p>";
   }
-
-  mysqli_close($conn);
   ?>
 
   <table border=1>

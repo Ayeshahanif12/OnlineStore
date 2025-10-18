@@ -1,9 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
-
+require_once '../db_config.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $cat_name = $_POST['category_name'];
 

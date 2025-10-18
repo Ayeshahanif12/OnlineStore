@@ -1,8 +1,6 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) { 
-    die("Database connection failed: " . mysqli_connect_error());
-}
+            require_once '../db_config.php';  
+
 
 // Category filter
 if (isset($_GET['category_id'])) {
@@ -165,8 +163,14 @@ body {
         <h3>Add New Product</h3>
         <input type="text" name="name" placeholder="Enter Name" class="form-control mb-2" required>
         <input type="file" name="image" class="form-control mb-2" required>
-        <input type="text" name="description" placeholder="Enter Description" class="form-control mb-2" required>
+     
+        <textarea name="description" placeholder="Enter Description" class="form-control mb-2" required></textarea>
+        <input type="text" name="code" placeholder="Enter Code" class="form-control mb-2" required>
+        
         <input type="text" name="price" placeholder="Enter Price" class="form-control mb-2" required>
+        <input type="checkbox" name="size[]" value="S" class="mb-2" > Small
+        <input type="checkbox" name="size[]" value="M" class="mb-2" > Medium
+        <input type="checkbox" name="size[]" value="L" class="mb-2" > Large   
         <select name="category_id" class="form-control mb-2" required>
             <?php
             $cats = mysqli_query($conn, "SELECT * FROM nav_categories");
@@ -183,6 +187,11 @@ body {
         $name = $_POST['name'];
         $description = $_POST['description'];
         $price = $_POST['price'];
+        $code = $_POST['code'];
+        // Handle the array of sizes. Implode it into a comma-separated string.
+        $sizes_array = $_POST['size'] ?? [];
+        $size_string = implode(",", $sizes_array);
+
         $cat_id = $_POST['category_id'];
 
         if (isset($_FILES['image'])) {
@@ -196,8 +205,8 @@ body {
                 // Database ke liye relative path save karo
                 $db_path = "image/" . basename($image_name);
 
-                $insert = "INSERT INTO products (name, image, description, price, category_id) 
-                           VALUES ('$name', '$db_path', '$description', '$price', '$cat_id')";
+                $insert = "INSERT INTO products (name, image, description, pro_code, price, size, category_id) 
+                           VALUES ('$name', '$db_path', '$description', '$code', '$price', '$size_string', '$cat_id')";
 
                 if (mysqli_query($conn, $insert)) {
                     echo "<script>alert('Product added successfully!');</script>";

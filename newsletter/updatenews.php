@@ -1,9 +1,6 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+            require_once '../db_config.php';  
 
-  if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-  }
 $id = $_POST['id'];
 
 $email = $_POST['email'];

@@ -1,9 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
+require_once '../db_config.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $id = (int)$_POST['id'];
     $alt_text = $_POST['alt_text'];
@@ -56,6 +52,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     }
     mysqli_stmt_close($stmt);
 }
-mysqli_close($conn);
-
 ?>

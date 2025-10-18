@@ -5,8 +5,8 @@ require 'PHPMailer/PHPMailer.php';
 require 'PHPMailer/SMTP.php';
 require 'PHPMailer/Exception.php';
 
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) { die("Connection failed: " . mysqli_connect_error()); }
+            require_once '../db_config.php';  
+
 
 if (isset($_POST['send_otp'])) {
     $email = mysqli_real_escape_string($conn, trim($_POST['email']));

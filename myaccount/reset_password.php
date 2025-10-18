@@ -1,6 +1,7 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+            require_once '../db_config.php';  
+
 
 if (!isset($_SESSION['verified']) || !$_SESSION['verified']) {
     header("Location: forget_password.php");

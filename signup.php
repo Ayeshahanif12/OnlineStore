@@ -2,11 +2,7 @@
 
 
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
-
+require_once 'db_config.php';
 // Load categories for navbar
 $category = mysqli_query($conn, "SELECT * FROM nav_categories");
 
@@ -326,15 +322,6 @@ if (isset($_POST['create'])) {
   </div>
 
   <?php
-  // CONNECTING NEWSLETTER WITH PHP
-  
-  // Connect to database
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
   if (isset($_POST['subscribe'])) {
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
@@ -360,7 +347,6 @@ if (isset($_POST['create'])) {
     }
   }
 
-  mysqli_close($conn);
   ?>
 
 

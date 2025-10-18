@@ -146,13 +146,8 @@
         <!-- Main Content -->
         <main class="main-section">
             <h2 style="margin-left: 20px;">All Users</h2>
-
             <?php
-            $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-            if (!$conn) {
-                die("Database connection failed: " . mysqli_connect_error());
-            }
-
+            require_once '../db_config.php';
             $select = "SELECT * FROM users";
             $result = mysqli_query($conn, $select);
             $dataAll = [];

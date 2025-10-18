@@ -7,21 +7,16 @@ if (!isset($_SESSION["role"]) == 'user') {
   exit();
 }
 
-
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
-
+require_once 'db_config.php';
 $user_id = $_SESSION['user_id'] ?? 0;
 
 // Check if the user has placed any orders
 $has_orders = false;
 if ($user_id > 0) {
-    $order_check_query = mysqli_query($conn, "SELECT id FROM checkout WHERE user_id = '$user_id' LIMIT 1");
-    if ($order_check_query && mysqli_num_rows($order_check_query) > 0) {
-        $has_orders = true;
-    }
+  $order_check_query = mysqli_query($conn, "SELECT id FROM checkout WHERE user_id = '$user_id' LIMIT 1");
+  if ($order_check_query && mysqli_num_rows($order_check_query) > 0) {
+    $has_orders = true;
+  }
 }
 
 
@@ -61,12 +56,14 @@ if (isset($_POST['add_to_cart'])) {
 
     $id = $_POST['id']; // product_id
     $name = $_POST['name'];
-    $price = $_POST['price'];
+    $price = (float) $_POST['price'];
     $image = $_POST['image'];
+    $code = $_POST['code'];
+    $size = $_POST['size'];
 
 
     // Check if already in cart
-    $check = mysqli_query($conn, "SELECT * FROM cart WHERE product_id = '$id'");
+    $check = mysqli_query($conn, "SELECT * FROM cart WHERE product_id = '$id' AND user_id = '$_SESSION[user_id]'");
     if (mysqli_num_rows($check) > 0) {
       // Update quantity
       $row = mysqli_fetch_assoc($check);
@@ -75,12 +72,12 @@ if (isset($_POST['add_to_cart'])) {
 
       mysqli_query($conn, "UPDATE cart 
                              SET qty = '$newQty', total = '$newTotal' 
-                             WHERE product_id = '$id'");
+                             WHERE product_id = '$id' AND user_id = '$_SESSION[user_id]'");
 
     } else {
       $total = $price * 1;
-      mysqli_query($conn, "INSERT INTO cart (user_id,product_id, name, price, image, qty, total) 
-                             VALUES ('$_SESSION[user_id]', '$id', '$name', '$price', '$image', 1, '$total')");
+      mysqli_query($conn, "INSERT INTO cart (user_id,product_id, name, price, image, qty, total, size, code) 
+                             VALUES ('$_SESSION[user_id]', '$id', '$name', '$price', '$image', 1, '$total', '$size', '$code')");
     }
 
     header("Location: index.php#openCart");
@@ -100,7 +97,6 @@ if (isset($_POST['remove_id'])) {
 }
 ?>
 <?php
-
 $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
 ?>
@@ -387,6 +383,16 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       z-index: 999;
       min-width: 200px;
     }
+
+    .card-title:hover {
+      text-decoration: underline;
+    }
+
+    .cart-item img {
+    width: 50px;
+    height: 75px;
+    margin-right: 10px;
+}
   </style>
 </head>
 
@@ -433,117 +439,122 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       <div class="search-container">
         <i class="bi bi-search text-white fs-5" id="openSearch" style="cursor:pointer;"></i>
         <div class="search-box" id="searchBox" style="height: 51px;">
-            <form method="GET" action="index.php" class="d-flex">
-                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search..."  value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" style="height: 35px;">
-                <button type="button" style="height: 35px;" class="btn btn-sm btn-dark ms-2" id="closeSearch"><i class="bi bi-x-lg"></i></button>
-            </form>
-            <div id="suggestionsBox"></div>
+          <form method="GET" action="index.php" class="d-flex">
+            <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search..."
+              value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+              style="height: 35px;">
+            <button type="button" style="height: 35px;" class="btn btn-sm btn-dark ms-2" id="closeSearch"><i
+                class="bi bi-x-lg"></i></button>
+          </form>
+          <div id="suggestionsBox"></div>
         </div>
       </div>
       <script>
-          document.getElementById("searchInput").addEventListener("keyup", function() {
-            let query = this.value.trim();
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+          let query = this.value.trim();
 
-            if (query.length > 0) {
-              fetch("search_suggestions.php?term=" + encodeURIComponent(query))
-                .then(res => res.json())
-                .then(data => {
-                  let box = document.getElementById("suggestionsBox");
-                  box.innerHTML = "";
+          if (query.length > 0) {
+            fetch("search_suggestions.php?term=" + encodeURIComponent(query))
+              .then(res => res.json())
+              .then(data => {
+                let box = document.getElementById("suggestionsBox");
+                box.innerHTML = "";
 
-                  if (data.length > 0) {
-                    data.forEach(item => {
-                      let div = document.createElement("div");
-                      div.style.display = "flex";
-                      div.style.alignItems = "center";
-                      div.style.padding = "5px";
-                      div.style.cursor = "pointer";
+                if (data.length > 0) {
+                  data.forEach(item => {
+                    let div = document.createElement("div");
+                    div.style.display = "flex";
+                    div.style.alignItems = "center";
+                    div.style.padding = "5px";
+                    div.style.cursor = "pointer";
 
-                      div.innerHTML = `
+                    div.innerHTML = `
               <img src="${item.image}" width="30" height="30" style="border-radius:5px; margin-right:10px;">
               <span>${item.name}</span>
             `;
 
-                      // Jab click karo to search box fill ho jaye
-                      div.addEventListener("click", function () {
-                        document.getElementById("searchInput").value = item.name;
-                        box.style.display = "none";
-                        // Submit form automatically
-                        document.querySelector(".search-box form").submit();
-                      });
-
-                      box.appendChild(div);
+                    // Jab click karo to search box fill ho jaye
+                    div.addEventListener("click", function () {
+                      document.getElementById("searchInput").value = item.name;
+                      box.style.display = "none";
+                      // Submit form automatically
+                      document.querySelector(".search-box form").submit();
                     });
-                    box.style.display = "block";
-                  } else {
-                    box.style.display = "none";
-                  }
-                });
-            } else {
-              document.getElementById("suggestionsBox").style.display = "none";
-            }
-          });
-        </script>
 
-        <!-- Shipping Icon -->
-        <?php if ($has_orders): ?>
-            <a href="order_status.php" class="ms-3 text-white">
-              <i class="fa fa-truck fs-5"></i>
-            </a>
-        <?php else: ?>
-            <a href="#" onclick="alert('First order please'); return false;" class="ms-3 text-white">
-              <i class="fa fa-truck fs-5"></i>
-            </a>
-        <?php endif; ?>
-
-        <!-- Cart -->
-        <button class="btn ms-3 position-relative" style="background:transparent; border:none;" type="button"
-          data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-
-          <!-- Cart Icon -->
-          <i class="fa fa-shopping-cart text-white fs-5"></i>
-
-          <!-- Badge -->
-          <?php
-          $cartCount = 0;
-          $result = mysqli_query($conn, "SELECT COUNT(*) AS totalItems FROM cart WHERE user_id = '$user_id'");
-          if ($result) {
-            $row = mysqli_fetch_assoc($result);
-            $cartCount = $row['totalItems'] ?? 0;
+                    box.appendChild(div);
+                  });
+                  box.style.display = "block";
+                } else {
+                  box.style.display = "none";
+                }
+              });
+          } else {
+            document.getElementById("suggestionsBox").style.display = "none";
           }
-          ?>
+        });
+      </script>
 
-          <?php if ($cartCount > 0): ?>
-            <span class="position-absolute top-2 start-101 translate-middle badge rounded-pill bg-danger">
-              <?php echo $cartCount; ?>
-            </span>
-          <?php endif; ?>
-        </button>
+      <!-- Shipping Icon -->
+      <?php if ($has_orders): ?>
+        <a href="order_status.php" class="ms-3 text-white">
+          <i class="fa fa-truck fs-5"></i>
+        </a>
+      <?php else: ?>
+        <a href="#" onclick="alert('First order please'); return false;" class="ms-3 text-white">
+          <i class="fa fa-truck fs-5"></i>
+        </a>
+      <?php endif; ?>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasRightLabel">My Cart</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <!-- Cart -->
+      <button class="btn ms-3 position-relative" style="background:transparent; border:none;" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
 
-            </button>
-          </div>
-          <div class="offcanvas-body" id="cartItems">
+        <!-- Cart Icon -->
+        <i class="fa fa-shopping-cart text-white fs-5"></i>
+
+        <!-- Badge -->
+        <?php
+        $cartCount = 0;
+        $result = mysqli_query($conn, "SELECT COUNT(*) AS totalItems FROM cart WHERE user_id = '$user_id'");
+        if ($result) {
+          $row = mysqli_fetch_assoc($result);
+          $cartCount = $row['totalItems'] ?? 0;
+        }
+        ?>
+
+        <?php if ($cartCount > 0): ?>
+          <span class="position-absolute top-2 start-101 translate-middle badge rounded-pill bg-danger">
+            <?php echo $cartCount; ?>
+          </span>
+        <?php endif; ?>
+      </button>
+
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasRightLabel">My Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+
+          </button>
+        </div>
+        <div class="offcanvas-body" id="cartItems">
 
 
 
-            <?php
-            $total = 0;
+          <?php
+          $total = 0;
 
-            $result = mysqli_query($conn, "SELECT * FROM cart WHERE user_id = '$user_id'");
-            if (mysqli_num_rows($result) > 0) {
-              while ($row = mysqli_fetch_assoc($result)) {
-                $subtotal = $row['total'];
-                $total += $subtotal;
-                echo "
+          $result = mysqli_query($conn, "SELECT * FROM cart WHERE user_id = '$user_id'");
+          if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+              $subtotal = $row['total'];
+              $total += $subtotal;
+              echo "
 <div class='cart-item d-flex align-items-center mb-3'>
   <img src='{$row['image']}' width='50' class='me-2'>
   <div class='flex-grow-1'>
-    <h6>{$row['name']}</h6>
+    <h6 style='text-transform: capitalize;'>{$row['name']}</h6>
+    " . (!empty($row['code']) ? "<small>Code: {$row['code']}</small><br>" : "") . "
+    " . (!empty($row['size']) ? "<small>Size: {$row['size']}</small>" : "") . "
     <p>PKR {$row['price']} x {$row['qty']} = PKR {$subtotal}</p>
   </div>
   <form method='post' action='index.php#openCart'>
@@ -555,23 +566,23 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 </div>
 
     ";
-              }
-              echo "<hr><h5>Total: PKR $total</h5>";
-            } else {
-              echo "<p>Your cart is empty.</p>";
             }
-            ?>
+            echo "<hr><h5>Total: PKR $total</h5>";
+          } else {
+            echo "<p>Your cart is empty.</p>";
+          }
+          ?>
 
-          </div>
+        </div>
 
-          <div style="text-align: center; margin: 20px;">
-            <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
-            <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
-          </div>
+        <div style="text-align: center; margin: 20px;">
+          <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
+          <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
+        </div>
 
 
 
-    </div>
+      </div>
   </nav>
   <script>
     const openSearch = document.getElementById("openSearch");
@@ -671,7 +682,6 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   </div>
 
   <?php
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
   $searchResults = [];
 
   if (isset($_GET['search']) && $_GET['search'] !== "") {
@@ -697,18 +707,14 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
               <img src="<?php echo $rows['image']; ?>" alt=""
                 style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
               <div class="card-body">
-                <h5 class="card-title"><span
-                    style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
-                </h5>
-                <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
+                <a href="products/pro_page.php?id=<?php echo $rows['id']; ?>" id="name" style="text-decoration: none;">
+                  <h5 class="card-title"
+                    style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;">
+                    <?php echo htmlspecialchars($rows['name']); ?>
+                  </h5>
+                </a>
                 <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
-                <form method="post" action="index.php#openCart">
-                  <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
-                  <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
-                  <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
-                  <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
-                  <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
-                </form>
+
 
               </div>
             </div>
@@ -726,7 +732,6 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
   <!-- PRODUCT CARD CONTAINER -->
   <?php
-
   $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
 
   while ($fcat = mysqli_fetch_assoc($cat)) {
@@ -734,22 +739,15 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
     $pro = mysqli_query($conn, "SELECT * FROM products WHERE category_id = {$fcat['id']}");
     while ($rows = mysqli_fetch_assoc($pro)) { ?>
       <div class="p-card">
-        <img src="<?php echo $rows['image']; ?>" alt=""
-          style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
+        <img src="<?php echo $rows['image']; ?>" alt="" style="width: 80%; border-radius: 10px; height: auto;">
         <div class="card-body">
-          <h5 class="card-title"><span
-              style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
-          </h5>
-          <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
+          <a href="products/pro_page.php?id=<?php echo $rows['id']; ?>" id="name" style="text-decoration: none;">
+            <h5 class="card-title"
+              style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;">
+              <?php echo htmlspecialchars($rows['name']); ?>
+            </h5>
+          </a>
           <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
-          <form method="post" action="index.php#openCart">
-            <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
-            <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
-            <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
-            <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
-            <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
-          </form>
-
         </div>
       </div>
 
@@ -854,12 +852,6 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
   <!-- CONNECTING CONTACT US WITH PHP -->
   <?php
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
   if (isset($_POST['contact'])) {
     $name = htmlspecialchars(trim($_POST['name']));
     $email = htmlspecialchars(trim($_POST['email']));
@@ -881,8 +873,6 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       mysqli_stmt_close($stmt);
     }
   }
-
-  mysqli_close($conn);
   ?>
 
 
@@ -930,16 +920,6 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   </div>
 
   <?php
-
-  // CONNECTING NEWSLETTER WITH PHP
-  
-  // Connect to database
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
   if (isset($_POST['subscribe'])) {
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
@@ -964,8 +944,6 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
       mysqli_stmt_close($stmt);
     }
   }
-
-  mysqli_close($conn);
   ?>
 
 

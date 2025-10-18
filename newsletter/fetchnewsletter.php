@@ -149,10 +149,8 @@
             <h2 style="margin-left:20px;">NEWSLETTER USERS</h2>
 
             <?php
-            $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-            if (!$conn) {
-                die("Database connection failed: " . mysqli_connect_error());
-            }
+                      require_once '../db_config.php';  
+
 
             $select = "SELECT * FROM newsletter";
             $result = mysqli_query($conn, $select);

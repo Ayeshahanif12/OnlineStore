@@ -10,11 +10,10 @@
 </body>
 </html>
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+            require_once '../db_config.php';  
 
-  if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-  }
+
+ 
 $id = $_GET['id'];
 $sql = "DELETE FROM newsletter WHERE id = '$id'";
 if (mysqli_query($conn, $sql)) {

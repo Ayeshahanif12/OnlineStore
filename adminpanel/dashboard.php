@@ -1,10 +1,6 @@
 <?php
 // DB Connection
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
-
+require_once '../db_config.php';
 // 🔹 Total Orders
 $totalOrders = 0;
 $res = mysqli_query($conn, "SELECT COUNT(*) as total FROM checkout");

@@ -1,10 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-    die("Database connection failed: " . mysqli_connect_error());
-}
-
+require_once '../db_config.php';
 // Sare checkouts fetch karo
 $checkouts = mysqli_query($conn, "SELECT * FROM checkout");
 ?>

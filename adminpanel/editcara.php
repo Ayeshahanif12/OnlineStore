@@ -1,9 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-    die("Database connection failed: " . mysqli_connect_error());
-}
-
+require_once '../db_config.php';
 $id = $_GET['id'];
 $sql = "SELECT * FROM carousel WHERE id='$id'";
 $result = mysqli_query($conn, $sql);

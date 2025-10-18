@@ -1,9 +1,6 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+            require_once '../db_config.php';  
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $id = (int)$_POST['id'];
