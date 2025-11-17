@@ -1,16 +1,15 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+include '../config.php';
+
+$id = (int)$_GET['id'];
+
+$stmt = mysqli_prepare($conn, "DELETE FROM carousel WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+if (mysqli_stmt_execute($stmt)) {
+    echo "<script>alert('Carousel deleted successfully!');</script>";
+} else {
+    echo "Error: " . mysqli_error($conn);
 }
-
-$id = $_GET['id'];
-
-    $delete = "DELETE FROM carousel WHERE id='$id'";
-    if (mysqli_query($conn, $delete)) {
-        echo "<script>alert('Carousel deleted successfully!');</script>";
-    } else {
-        echo "Error: " . $delete . "<br>" . mysqli_error($conn);
-    }
+mysqli_stmt_close($stmt);
 header("Location: adminpage.php");
 ?>

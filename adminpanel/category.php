@@ -1,8 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
+include '../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $cat_name = $_POST['category_name'];
@@ -10,20 +7,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_FILES['image'])) {
     $image_name = $_FILES['image']['name'];
     $image_tmp = $_FILES['image']['tmp_name'];
-
     $target_path = "image/" . $image_name;
 
+    $stmt = mysqli_prepare($conn, "INSERT INTO nav_categories (name, img) VALUES (?, ?)");
+    mysqli_stmt_bind_param($stmt, "ss", $cat_name, $image_name);
 
-
-    $insert = "INSERT INTO nav_categories (name, img) 
-                       VALUES ('$cat_name', '$image_name')";
-
-    if (mysqli_query($conn, $insert)) {
-      echo "<script>alert('Category added successfully!');</script>";
+    if (mysqli_stmt_execute($stmt)) {
+      move_uploaded_file($image_tmp, "../" . $target_path); // Make sure the path is correct
+      echo "<script>alert('Category added successfully!'); window.location.href='category.php';</script>";
     } else {
-      echo "Error: " . $insert . "<br>" . mysqli_error($conn);
+      echo "Error: " . mysqli_error($conn);
     }
-
+    mysqli_stmt_close($stmt);
   }
 }
 ?>
@@ -215,42 +210,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="http://localhost/store/adminpanel/adminpage.php" class="nav-link active">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/adminpage.php" class="nav-link">
           <i class="bi bi-house-door-fill me-2"></i> Home
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/dashboard.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/dashboard.php" class="nav-link">
           <i class="bi bi-speedometer2 me-2"></i> Dashboard
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/order.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/order.php" class="nav-link">
           <i class="bi bi-table me-2"></i> Orders
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/products/product.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/products/product.php" class="nav-link">
           <i class="bi bi-grid me-2"></i> Products
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/user.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/user.php" class="nav-link">
           <i class="bi bi-people me-2"></i> Customers
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/category.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/category.php" class="nav-link active">
           <i class="bi bi-tags me-2"></i> Categories
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/newsletter/fetchnewsletter.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/newsletter/fetchnewsletter.php" class="nav-link">
           <i class="bi bi-envelope me-2"></i> Newsletter
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/contactus/fetchmessages.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/contactus/fetchmessages.php" class="nav-link">
           <i class="bi bi-telephone me-2"></i> Contact Us
         </a>
       </li>
@@ -269,7 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li>
           <hr class="dropdown-divider">
         </li>
-        <li><a class="dropdown-item" href="http://localhost/store/login.php">Sign out</a></li>
+        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/logout.php">Sign out</a></li>
       </ul>
     </div>
   </div>

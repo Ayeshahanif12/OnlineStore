@@ -1,35 +1,32 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
+include 'config.php';
 
 $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
-
-
-
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $username = $_POST['email'];
+  $email = $_POST['email'];
   $password = $_POST['password'];
 
-  $sql = "SELECT * FROM users WHERE email='$username' AND password='$password'";
-  $result = mysqli_query($conn, $sql);
+  // Use prepared statements to prevent SQL injection
+  $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email = ?");
+  mysqli_stmt_bind_param($stmt, "s", $email);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
 
-  if (mysqli_num_rows($result) == 1) {
+  if ($result && mysqli_num_rows($result) == 1) {
     $user = mysqli_fetch_assoc($result);
 
-    $_SESSION['user_id'] = $user['id']; // ✅ yahan user_id session me save ho gaya
-    $_SESSION['username'] = $user['full_name'];
-    $_SESSION['role'] = $user['role'];  // role session me save
-
-    if ($user['role'] == "admin") {
-      header("Location: http://localhost/store/adminpanel/adminpage.php");
-    } else {
-      header("Location: index.php");
+    // Verify the password
+    if (password_verify($password, $user['password'])) {
+      $_SESSION['user_id'] = $user['id'];
+      $_SESSION['username'] = $user['fname']; // Use 'fname' as there is no 'full_name'
+      $_SESSION['role'] = $user['role'];
+      if ($user['role'] == "admin") {
+        header("Location: " . BASE_URL . "/adminpanel/adminpage.php");
+      } else {
+        header("Location: index.php");
+      }
     }
   } else {
     echo "<script>alert('Invalid username or password');</script>";
@@ -123,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </span>
       </div>
 <button id="create" name="login" style="margin-left: 5px;" class="btn btn-dark">login</button><br>
-      <a href="http://localhost/store/myaccount/forget_password.php">Forgot Password</a>
+      <a href="<?php echo BASE_URL; ?>/myaccount/forget_password.php">Forgot Password</a>
       <a style="display: block;
         margin: 0 auto;
         width: fit-content;
@@ -147,8 +144,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <h3>MY ACCOUNT</h3>
       <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
-      <a href="http://localhost/store/myaccount/settings.php">ACCOUNT INFO</a>
-      <a href="http://localhost/store/myaccount/order_status.php">ORDER HISTORY</a>
+      <a href="<?php echo BASE_URL; ?>/myaccount/settings.php">ACCOUNT INFO</a>
+      <a href="<?php echo BASE_URL; ?>/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">
@@ -174,16 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 
   <?php
-  // CONNECTING NEWSLETTER WITH PHP
-  
-  // Connect to database
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
-  if (isset($_POST['subscribe'])) {
+  if (isset($_POST['subscribe'])) { // CONNECTING NEWSLETTER WITH PHP
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
 
@@ -206,10 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       mysqli_stmt_close($stmt);
     }
-  }
-
-  mysqli_close($conn);
-  ?>
+  } ?>
 
 
   <div class="footer">

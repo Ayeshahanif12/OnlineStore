@@ -1,22 +1,22 @@
 <?php
 session_start();
+include '../config.php';
+
 if ($_SESSION['role'] != "admin") {
-  header("Location: http://localhost/store/login.php");
+  header("Location: " . BASE_URL . "/login.php");
   exit();
 }
 
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
 
 if (isset($_POST['add_category'])) {
   $image = $_FILES['image']['name'];
   $alt_text = $_POST['category_name'];
-  $target = "image/" . basename($image);
+  $target = "../image/" . basename($image); // Corrected path to be relative to project root
 
-  $sql = "INSERT INTO carousel (img, alt_text) VALUES ('$image', '$alt_text')";
-  if (mysqli_query($conn, $sql)) {
+  $stmt = mysqli_prepare($conn, "INSERT INTO carousel (img, alt_text) VALUES (?, ?)");
+  mysqli_stmt_bind_param($stmt, "ss", $image, $alt_text);
+
+  if (mysqli_stmt_execute($stmt)) {
     if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
       echo "<p>Image uploaded successfully.</p>";
     } else {
@@ -25,6 +25,7 @@ if (isset($_POST['add_category'])) {
   } else {
     echo "<p>Error: " . mysqli_error($conn) . "</p>";
   }
+  mysqli_stmt_close($stmt);
 }
 ?>
 
@@ -218,42 +219,42 @@ if (isset($_POST['add_category'])) {
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="http://localhost/store/adminpanel/adminpage.php" class="nav-link active">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/adminpage.php" class="nav-link active">
           <i class="bi bi-house-door-fill me-2"></i> Home
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/dashboard.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/dashboard.php" class="nav-link">
           <i class="bi bi-speedometer2 me-2"></i> Dashboard
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/order.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/order.php" class="nav-link">
           <i class="bi bi-table me-2"></i> Orders
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/products/product.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/products/product.php" class="nav-link">
           <i class="bi bi-grid me-2"></i> Products
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/user.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/user.php" class="nav-link">
           <i class="bi bi-people me-2"></i> Customers
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/adminpanel/category.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/category.php" class="nav-link">
           <i class="bi bi-tags me-2"></i> Categories
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/newsletter/fetchnewsletter.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/newsletter/fetchnewsletter.php" class="nav-link">
           <i class="bi bi-envelope me-2"></i> Newsletter
         </a>
       </li>
       <li>
-        <a href="http://localhost/store/contactus/fetchmessages.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/contactus/fetchmessages.php" class="nav-link">
           <i class="bi bi-telephone me-2"></i> Contact Us
         </a>
       </li>
@@ -272,7 +273,7 @@ if (isset($_POST['add_category'])) {
         <li>
           <hr class="dropdown-divider">
         </li>
-        <li><a class="dropdown-item" href="http://localhost/store/login.php">Sign out</a></li>
+        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/logout.php">Sign out</a></li>
       </ul>
     </div>
   </div>
@@ -305,7 +306,6 @@ if (isset($_POST['add_category'])) {
     echo "<p>No carousel found.</p>";
   }
 
-  mysqli_close($conn);
   ?>
 
   <table border=1>

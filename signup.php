@@ -1,11 +1,6 @@
 <?php
-
-
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
+include 'config.php';
 
 // Load categories for navbar
 $category = mysqli_query($conn, "SELECT * FROM nav_categories");
@@ -62,9 +57,9 @@ if (isset($_POST['create'])) {
       } else {
         $check->close();
         // hash password and insert
-       ;
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, password) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $Fname, $Lname, $email, $password);
+        $stmt->bind_param("ssss", $Fname, $Lname, $email, $hashed_password);
         if ($stmt->execute()) {
           $signup_success = true;
         } else {
@@ -191,7 +186,7 @@ if (isset($_POST['create'])) {
         </li>
         <li><a class="links text-white" href="#policy">Policy</a></li>
         <li><a class="links text-white" href="#contactus">Contact us</a></li>
-        <li><a class="links text-white" href="http://localhost/store/myaccount/settings.php">Settings</a></li>
+        <li><a class="links text-white" href="<?php echo BASE_URL; ?>/myaccount/settings.php">Settings</a></li>
       </ul>
     </div>
   </div>
@@ -299,8 +294,8 @@ if (isset($_POST['create'])) {
       <h3>MY ACCOUNT</h3>
       <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
-      <a href="http://localhost/store/myaccount/settings.php">ACCOUNT INFO</a>
-      <a href="http://localhost/store/myaccount/order_status.php">ORDER HISTORY</a>
+      <a href="<?php echo BASE_URL; ?>/myaccount/settings.php">ACCOUNT INFO</a>
+      <a href="<?php echo BASE_URL; ?>/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">
@@ -326,16 +321,7 @@ if (isset($_POST['create'])) {
   </div>
 
   <?php
-  // CONNECTING NEWSLETTER WITH PHP
-  
-  // Connect to database
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
-  if (isset($_POST['subscribe'])) {
+  if (isset($_POST['subscribe'])) { // CONNECTING NEWSLETTER WITH PHP
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
 
@@ -358,10 +344,7 @@ if (isset($_POST['create'])) {
 
       mysqli_stmt_close($stmt);
     }
-  }
-
-  mysqli_close($conn);
-  ?>
+  } ?>
 
 
   <div class="footer">

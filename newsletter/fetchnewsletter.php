@@ -1,4 +1,4 @@
-tumne sari 35 ki <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -85,42 +85,42 @@ tumne sari 35 ki <!DOCTYPE html>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="http://localhost/clothing%20store/adminpanel/adminpage.php" class="nav-link active">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/adminpage.php" class="nav-link active">
           <i class="bi bi-house-door-fill me-2"></i> Home
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/adminpanel/dashboard.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/dashboard.php" class="nav-link">
           <i class="bi bi-speedometer2 me-2"></i> Dashboard
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/adminpanel/order.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/order.php" class="nav-link">
           <i class="bi bi-table me-2"></i> Orders
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/products/product.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/products/product.php" class="nav-link">
           <i class="bi bi-grid me-2"></i> Products
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/adminpanel/user.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/user.php" class="nav-link">
           <i class="bi bi-people me-2"></i> Customers
         </a>
       </li>
          <li>
-        <a href="http://localhost/clothing%20store/adminpanel/category.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/adminpanel/category.php" class="nav-link">
           <i class="bi bi-tags me-2"></i> Categories
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/newsletter/fetchnewsletter.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/newsletter/fetchnewsletter.php" class="nav-link">
           <i class="bi bi-envelope me-2"></i> Newsletter
         </a>
       </li>
       <li>
-        <a href="http://localhost/clothing%20store/contactus/fetchmessages.php" class="nav-link">
+        <a href="<?php echo BASE_URL; ?>/contactus/fetchmessages.php" class="nav-link">
           <i class="bi bi-telephone me-2"></i> Contact Us
         </a>
       </li>
@@ -136,7 +136,7 @@ tumne sari 35 ki <!DOCTYPE html>
         <li><a class="dropdown-item" href="#">Settings</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="http://localhost/clothing%20store/login.php">Sign out</a></li>
+        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/login.php">Sign out</a></li>
       </ul>
     </div>
   </div>

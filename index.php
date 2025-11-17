@@ -1,5 +1,7 @@
 <?php
-session_start();
+
+include 'config.php';
+
 if (!isset($_SESSION["role"]) == 'user') {
   // User is not logged in, redirect to login page
   echo "<script>alert('Please login to continue.');</script>";
@@ -8,15 +10,6 @@ if (!isset($_SESSION["role"]) == 'user') {
 }
 
 
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
-
-$user_id = $_SESSION['user_id'] ?? 0;
-
-// Check if the user has placed any orders
-$has_orders = false;
 if ($user_id > 0) {
   $order_check_query = mysqli_query($conn, "SELECT id FROM checkout WHERE user_id = '$user_id' LIMIT 1");
   if ($order_check_query && mysqli_num_rows($order_check_query) > 0) {
@@ -99,15 +92,8 @@ if (isset($_POST['remove_id'])) {
   exit;
 }
 ?>
-<?php
-
-$category = mysqli_query($conn, "SELECT * FROM nav_categories ");
-
-?>
 
 
-
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -505,7 +491,7 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
         <li> <a class="links" href="#policy">Policy</a> </li>
         <li> <a class="links" href="#contactus">Contact us</a> </li>
-        <li> <a class="links" href="http://localhost/store/myaccount/settings.php">Settings</a> </li>
+        <li> <a class="links" href="<?php echo BASE_URL; ?>/myaccount/settings.php">Settings</a> </li>
     </div>
   </div>
   </ul>
@@ -769,9 +755,7 @@ $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
   </div>
 
   <?php
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
   $searchResults = [];
-
   if (isset($_GET['search']) && $_GET['search'] !== "") {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
     $sql = "SELECT * FROM products WHERE name LIKE '%$search%' OR id LIKE '%$search%'";
@@ -987,14 +971,7 @@ if (isset($_GET['price_filter'])) {
 
 
   <!-- CONNECTING CONTACT US WITH PHP -->
-  <?php
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
-  if (isset($_POST['contact'])) {
+  <?php if (isset($_POST['contact'])) {
     $name = htmlspecialchars(trim($_POST['name']));
     $email = htmlspecialchars(trim($_POST['email']));
     $message = htmlspecialchars(trim($_POST['message']));
@@ -1016,7 +993,6 @@ if (isset($_GET['price_filter'])) {
     }
   }
 
-  mysqli_close($conn);
   ?>
 
 
@@ -1035,8 +1011,8 @@ if (isset($_GET['price_filter'])) {
       <h3>MY ACCOUNT</h3>
       <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
-      <a href="http://localhost/store/myaccount/settings.php">SETTINGS</a>
-      <a href="http://localhost/store/myaccount/order_status.php">ORDER HISTORY</a>
+      <a href="<?php echo BASE_URL; ?>/myaccount/settings.php">SETTINGS</a>
+      <a href="<?php echo BASE_URL; ?>/order_status.php">ORDER HISTORY</a>
     </div>
 
     <div class="footercontainer">
@@ -1064,16 +1040,7 @@ if (isset($_GET['price_filter'])) {
   </div>
 
   <?php
-
   // CONNECTING NEWSLETTER WITH PHP
-  
-  // Connect to database
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
   if (isset($_POST['subscribe'])) {
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
@@ -1097,9 +1064,7 @@ if (isset($_GET['price_filter'])) {
 
       mysqli_stmt_close($stmt);
     }
-  }
-
-  mysqli_close($conn);
+  } 
   ?>
 
 
@@ -1121,4 +1086,10 @@ if (isset($_GET['price_filter'])) {
     }
   });
 
+  // Close the connection at the very end of the script
+  <?php
+    if (isset($conn)) {
+        mysqli_close($conn);
+    }
+  ?>
 </script>

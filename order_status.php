@@ -1,9 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
+include 'config.php';
 
 // Pehle user ke sare orders fetch karo
 $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSION['user_id']}' ORDER BY id DESC");
@@ -247,7 +244,7 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
         </li>
         <li> <a class="links" href="index.php">Policy</a> </li>
         <li> <a class="links" href="index.php">Contact us</a> </li>
-        <li> <a class="links" href="http://localhost/store/myaccount/settings.php">Settings</a> </li>
+        <li> <a class="links" href="<?php echo BASE_URL;?>/myaccount/settings.php">Settings</a> </li>
     </div>
   </div>
   </ul>

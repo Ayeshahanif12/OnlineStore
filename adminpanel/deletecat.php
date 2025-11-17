@@ -9,18 +9,16 @@
     
 </body>
 </html>
-<?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-  }
-$id = $_GET['id'];
-$sql = "DELETE FROM nav_categories WHERE id = '$id'";
-if (mysqli_query($conn, $sql)) {
+<?php 
+include '../config.php';
+$id = (int)$_GET['id'];
+$stmt = mysqli_prepare($conn, "DELETE FROM nav_categories WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+if (mysqli_stmt_execute($stmt)) {
     echo "<script>alert('Record deleted successfully');</script>";
     header("Location: category.php");
 } else {
     echo "Error deleting record: " . mysqli_error($conn);
 }
+mysqli_stmt_close($stmt);
 ?>

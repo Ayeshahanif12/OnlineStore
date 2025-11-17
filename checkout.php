@@ -5,11 +5,9 @@ if (isset($_SESSION['user_id'])) {
     $login_user = $_SESSION['user_id'];
 }
 
-$conn = mysqli_connect('localhost', 'root', '', 'clothing_store');
+include 'config.php';
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+
 
 
 
@@ -499,15 +497,8 @@ VALUES
 
             <!-- Right Section -->
             <div class="order-summary">
-                <h3>Order Summary</h3>
-                <?php
-                $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-                if (!$conn) {
-                    die("Database connection failed: " . mysqli_connect_error());
-                }
-                $user_id = $_SESSION['user_id'];
-                $sql = mysqli_query($conn, "SELECT * FROM cart where user_id = '$user_id'");
-
+                <h3>Order Summary</h3>                <?php
+                $sql = mysqli_query($conn, "SELECT * FROM cart WHERE user_id = '$user_id'");
                 $subtotal = 0;
                 while ($row = mysqli_fetch_assoc($sql)) {
                     $subtotal += $row['total'];

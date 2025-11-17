@@ -1,7 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
+include '../config.php';
 if (!isset($_SESSION['user_id'])) {
   die("Please login first.");
 }
@@ -51,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current_password'])) 
   if (password_verify($current, $user['password']) || $current === $user['password']) {
     if ($new === $confirm) {
       $hashed = password_hash($new, PASSWORD_DEFAULT);
-      mysqli_query($conn, "UPDATE users SET password='$hashed' WHERE id=$userId");
+      mysqli_stmt_bind_param($stmt, "si", $hashed, $userId);
+      mysqli_stmt_execute($stmt);
       $msg = "✅ Password updated successfully!";
     } else {
       $msg = "❌ New and Confirm password do not match!";
@@ -445,7 +445,7 @@ if (!isset($orderStatus)) {
     <h2>Settings</h2>
     <div class="menu">
       <a href="#" onclick="showSection('profile', event)"><i class="fa fa-user"></i> Profile</a>
-      <a href="http://localhost/store/index.php"><i class="fa fa-home"></i> Home</a>
+      <a href="<?php echo BASE_URL; ?>/index.php"><i class="fa fa-home"></i> Home</a>
       <a href="#" onclick="showSection('password', event)"><i class="fa fa-lock"></i> Password</a>
       <a href="#" onclick="showSection('shipping', event)"><i class="fa fa-truck"></i> Shipping</a>
       <a href="#" onclick="showSection('privacy', event)"><i class="fa fa-shield-alt"></i> Privacy</a>
@@ -453,7 +453,7 @@ if (!isset($orderStatus)) {
       <a href="#" onclick="showSection('help', event)"><i class="fa fa-life-ring"></i> Help</a>
     </div>
 
-    <a id="logout" href="http://localhost/store/logout.php" class="btn btn-danger">Logout</a>
+    <a id="logout" href="<?php echo BASE_URL; ?>/logout.php" class="btn btn-danger">Logout</a>
   </div>
 
   <div class="content">
@@ -505,7 +505,7 @@ if (!isset($orderStatus)) {
           <input type="password" id="confirm_password" name="confirm_password" required>
           <i class="fa fa-eye toggle-eye" onclick="togglePassword('confirm_password', this)"></i>
         </div>
-        <a href="http://localhost/store/myaccount/forget_password.php" style="display: block; text-align: center; margin-bottom: 15px;">Forgot Password?</a>
+        <a href="<?php echo BASE_URL; ?>/myaccount/forget_password.php" style="display: block; text-align: center; margin-bottom: 15px;">Forgot Password?</a>
         <button type="submit" class="form-button" name="update_password">Update Password</button>
       </form>
       <?php if (isset($passwordMsg)) { ?>

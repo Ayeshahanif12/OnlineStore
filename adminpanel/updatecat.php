@@ -1,15 +1,14 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-      die("Connection failed: " . mysqli_connect_error());
-  }
-$id = $_POST['id'];
+include '../config.php';
+$id = (int)$_POST['id'];
 $name = $_POST['category_name'];
 $new_image = $_FILES['image']['name'];
 
 // Get old image name from database
-$old_image_query = mysqli_query($conn, "SELECT img FROM nav_categories WHERE id='$id'");
+$stmt = mysqli_prepare($conn, "SELECT img FROM nav_categories WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$old_image_query = mysqli_stmt_get_result($stmt);
 $old_image_row = mysqli_fetch_assoc($old_image_query);
 $old_image = $old_image_row['img'];
 
@@ -37,14 +36,15 @@ if ($new_image != '') {
 }
 
 // Update the database record
-$sql = "UPDATE nav_categories SET name = '$name', img='$update_filename' WHERE id = '$id'";
-if (mysqli_query($conn, $sql)) {
+$stmt = mysqli_prepare($conn, "UPDATE nav_categories SET name = ?, img = ? WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "ssi", $name, $update_filename, $id);
+if (mysqli_stmt_execute($stmt)) {
     echo "<script>alert('Record updated successfully');</script>";
     header("Location: category.php");
 } else {
     echo "Error updating record: " . mysqli_error($conn);
 }
-
+mysqli_stmt_close($stmt);
 
 
 ?>

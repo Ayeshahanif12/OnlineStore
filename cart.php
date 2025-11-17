@@ -7,10 +7,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) {
-  die("DB failed: " . mysqli_connect_error());
-}
+
+include 'config.php';
 
 // 2. Get the logged-in user's ID
 $user_id = $_SESSION['user_id'];
@@ -555,21 +553,10 @@ textarea {
   </div>
 
   <?php
-
-  // CONNECTING NEWSLETTER WITH PHP
-  
-  // Connect to database
-  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
-
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
-
   if (isset($_POST['subscribe'])) {
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
 
-    // Optional: Input Validation
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       echo "<script>alert('Invalid email');</script>";
     } elseif (!preg_match('/^\d{11}$/', $whatsapp)) {
@@ -589,8 +576,6 @@ textarea {
       mysqli_stmt_close($stmt);
     }
   }
-
-  mysqli_close($conn);
   ?>
 
 

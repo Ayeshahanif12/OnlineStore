@@ -1,11 +1,6 @@
 <?php
-session_start();
-require 'config.php';
-require 'PHPMailer/PHPMailer.php';
 
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
-if (!$conn) { die("Connection failed: " . mysqli_connect_error()); }
-
+include '../config.php';
 if (isset($_POST['send_otp'])) {
     $email = mysqli_real_escape_string($conn, trim($_POST['email']));
 
@@ -130,7 +125,7 @@ if (isset($_POST['send_otp'])) {
       <input type="email" name="email" placeholder="Enter your registered email" required>
       <button type="submit" name="send_otp">Send OTP</button>
     </form>
-    <a href="http://localhost/store/login.php" class="back-link">Back to Login</a>
+    <a href="<?php echo BASE_URL; ?>/login.php" class="back-link">Back to Login</a>
   </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
-session_start();
-$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+
+include '../configs.php';
 
 if (!isset($_SESSION['verified']) || !$_SESSION['verified']) {
     header("Location: forget_password.php");
@@ -21,7 +21,7 @@ if (isset($_POST['reset'])) {
         $query = "UPDATE users SET password='$hashedPass' WHERE email='$email_safe'";
         if (mysqli_query($conn, $query)) {
             unset($_SESSION['otp'], $_SESSION['otp_time'], $_SESSION['verified'], $_SESSION['reset_email']);
-            echo "<script>alert('Password Updated!'); window.location.href='http://localhost/store/login.php';</script>";
+            echo "<script>alert('Password Updated!'); window.location.href='" . BASE_URL . "/login.php';</script>";
             exit;
         } else {
             echo "<script>alert('Database error.');</script>";
