@@ -2,6 +2,8 @@
 
 include 'config.php';
 
+$user_id = $_SESSION['user_id'] ?? 0;
+
 if (!isset($_SESSION["role"]) == 'user') {
   // User is not logged in, redirect to login page
   echo "<script>alert('Please login to continue.');</script>";
