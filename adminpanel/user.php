@@ -1,3 +1,6 @@
+<?php
+include '../config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +17,19 @@
         body {
       min-height: 100vh;
       display: flex;
+      background-color: #f8f9fa;
     }
     .sidebar {
       width: 280px;
       height: 100vh;
       background-color: #212529;
       color: white;
+      flex-shrink: 0;
+    }
+    .main-section {
+      flex-grow: 1;
+      padding: 20px; /* Add padding to the main content area */
+      overflow-x: hidden; /* Prevent main section from overflowing */
     }
     .sidebar .nav-link {
       color: white;
@@ -27,10 +37,11 @@
     .sidebar .nav-link.active {
       background-color: #0d6efd;
     }
-        table {
+    .table-responsive-wrapper {
+        overflow-x: auto; /* This makes the wrapper scrollable */
+    }
+        .table-responsive-wrapper table {
             width: 100%;
-            margin-top: 20px;
-            margin-left: 20px;
             border-collapse: collapse;
             background: #fff;
         }
@@ -39,10 +50,8 @@
             text-align: center;
             border: 1px solid #ccc;
         }
-        a {
+        td a {
             text-decoration: none;
-            color: white;
-
             padding: 5px 10px;
             
         }
@@ -77,7 +86,7 @@
 </head>
 <body>
       <div class="sidebar d-flex flex-column p-3">
-    <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <a href="<?php echo BASE_URL; ?>/adminpanel/adminpage.php" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
       <span class="fs-4">Admin</span>
     </a>
     <hr>
@@ -141,14 +150,11 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
         <!-- Main Content -->
         <main class="main-section">
-            <h2 style="margin-left: 20px;">All Users</h2>
-
+            <h2>All Users</h2>
+            
             <?php
-            include '../config.php';
             $select = "SELECT * FROM users";
             $result = mysqli_query($conn, $select);
             $dataAll = [];
@@ -160,30 +166,31 @@
             }
             ?>
 
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th colspan="2">Actions</th>
-                </tr>
-
-                <?php foreach ($dataAll as $rows): ?>
+            <div class="table-responsive-wrapper">
+                <table>
                     <tr>
-                  <td><?= $rows['id'] ?></td>
-                  <td><?= $rows['fname'] ?></td>
-                  <td><?= $rows['lname'] ?></td>
-                  <td><?= $rows['email'] ?></td>
-                  <td><?= $rows['password'] ?></td>
-                  <td><a href="editdata.php?id=<?= $rows['id'] ?>" id="edit-btn">Edit</a></td>
-                  <td><a href="deletedata.php?id=<?= $rows['id'] ?>" id="delete-btn" >Delete</a></td>
-                 </tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th colspan="2">Actions</th>
+                    </tr>
 
-                <?php endforeach; ?>
-            </table>
+                    <?php foreach ($dataAll as $rows): ?>
+                        <tr>
+                      <td><?= $rows['id'] ?></td>
+                      <td><?= $rows['fname'] ?></td>
+                      <td><?= $rows['lname'] ?></td>
+                      <td><?= $rows['email'] ?></td>
+                      <td><?= $rows['password'] ?></td>
+                      <td><a href="editdata.php?id=<?= $rows['id'] ?>" id="edit-btn">Edit</a></td>
+                      <td><a href="deletedata.php?id=<?= $rows['id'] ?>" id="delete-btn" >Delete</a></td>
+                     </tr>
+
+                    <?php endforeach; ?>
+                </table>
+            </div>
         </main>
-    </div>
 </body>
 </html>

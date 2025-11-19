@@ -3,16 +3,22 @@
 include 'config.php';
 
 $user_id = $_SESSION['user_id'] ?? 0;
+$has_orders = false;
 
-if (!isset($_SESSION["role"]) == 'user') {
+if (!isset($_SESSION["user_id"]) || !isset($_SESSION["role"]) || $_SESSION['role'] !== 'user') {
   // User is not logged in, redirect to login page
-  echo "<script>alert('Please login to continue.');</script>";
-  header("location: login.php");
+  echo "<script>
+          alert('Please login to continue.');
+          window.location.href = 'login.php';
+        </script>";
   exit();
 }
 
+$category = mysqli_query($conn, "SELECT * FROM nav_categories");
+
 
 if ($user_id > 0) {
+  $has_orders = false;
   $order_check_query = mysqli_query($conn, "SELECT id FROM checkout WHERE user_id = '$user_id' LIMIT 1");
   if ($order_check_query && mysqli_num_rows($order_check_query) > 0) {
     $has_orders = true;
@@ -47,44 +53,64 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
   }
 }
 
-// ------------------- ADD TO CART -------------------
+// ------------------- ADD TO CART (UPDATED FOR MULTIPLE IMAGES, SALE PRICE, STOCK STATUS, AND SECURITY) -------------------
 if (isset($_POST['add_to_cart'])) {
-
   if ($_SESSION['user_id'] != "") {
+    $product_id = (int)$_POST['id']; // Sanitize product ID
 
+    // Fetch product details from database for security and correct pricing
+    $product_stmt = mysqli_prepare($conn, "SELECT name, price, sale_price, featured_image, stock_status FROM products WHERE id = ?");
+    mysqli_stmt_bind_param($product_stmt, "i", $product_id);
+    mysqli_stmt_execute($product_stmt);
+    $product_result = mysqli_stmt_get_result($product_stmt);
+    $product_data = mysqli_fetch_assoc($product_result);
+    mysqli_stmt_close($product_stmt);
 
+    if ($product_data) {
+      $name = $product_data['name'];
+      $price = ($product_data['sale_price'] > 0) ? $product_data['sale_price'] : $product_data['price']; // Use sale price if available
+      $image = $product_data['featured_image'];
+      $stock_status = $product_data['stock_status'];
 
-    $id = $_POST['id']; // product_id
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $image = $_POST['image'];
+      if ($stock_status == 'out_of_stock') {
+        echo "<script>alert('This product is currently out of stock.'); window.location.href='index.php';</script>";
+        exit;
+      }
 
+      // Check if already in cart
+      $check_cart_stmt = mysqli_prepare($conn, "SELECT qty FROM cart WHERE product_id = ? AND user_id = ?");
+      mysqli_stmt_bind_param($check_cart_stmt, "ii", $product_id, $_SESSION['user_id']);
+      mysqli_stmt_execute($check_cart_stmt);
+      $cart_result = mysqli_stmt_get_result($check_cart_stmt);
 
-    // Check if already in cart
-    $check = mysqli_query($conn, "SELECT * FROM cart WHERE product_id = '$id'");
-    if (mysqli_num_rows($check) > 0) {
-      // Update quantity
-      $row = mysqli_fetch_assoc($check);
-      $newQty = $row['qty'] + 1;
-      $newTotal = $newQty * $price;
+      if (mysqli_num_rows($cart_result) > 0) {
+        $cart_row = mysqli_fetch_assoc($cart_result);
+        $newQty = $cart_row['qty'] + 1;
+        $newTotal = $newQty * $price;
 
-      mysqli_query($conn, "UPDATE cart 
-                             SET qty = '$newQty', total = '$newTotal' 
-                             WHERE product_id = '$id'");
+        $update_cart_stmt = mysqli_prepare($conn, "UPDATE cart SET qty = ?, total = ? WHERE product_id = ? AND user_id = ?");
+        mysqli_stmt_bind_param($update_cart_stmt, "idii", $newQty, $newTotal, $product_id, $_SESSION['user_id']);
+        mysqli_stmt_execute($update_cart_stmt);
+        mysqli_stmt_close($update_cart_stmt);
+      } else {
+        $total = $price * 1;
+        $insert_cart_stmt = mysqli_prepare($conn, "INSERT INTO cart (user_id, product_id, name, price, image, qty, total) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($insert_cart_stmt, "iissdid", $_SESSION['user_id'], $product_id, $name, $price, $image, 1, $total);
+        mysqli_stmt_execute($insert_cart_stmt);
+        mysqli_stmt_close($insert_cart_stmt);
+      }
+      mysqli_stmt_close($check_cart_stmt);
 
+      header("Location: index.php#openCart");
+      exit;
     } else {
-      $total = $price * 1;
-      mysqli_query($conn, "INSERT INTO cart (user_id,product_id, name, price, image, qty, total) 
-                             VALUES ('$_SESSION[user_id]', '$id', '$name', '$price', '$image', 1, '$total')");
+      echo "<script>alert('Product not found.'); window.location.href='index.php';</script>";
+      exit;
     }
-
-    header("Location: index.php#openCart");
-    exit;
+  } else {
+    echo "<script>alert('Please login to continue.'); window.location.href='login.php';</script>";
+    exit();
   }
-} else if ($_SESSION['role'] == '') {
-  echo "<script>alert('Please login to continue.');</script>";
-  header("location: login.php");
-  exit();
 }
 // ------------------- REMOVE FROM CART -------------------
 if (isset($_POST['remove_id'])) {
@@ -627,7 +653,7 @@ if (isset($_POST['remove_id'])) {
               $total += $subtotal;
               echo "
 <div class='cart-item d-flex align-items-center mb-3'>
-  <img src='{$row['image']}' width='50' class='me-2'>
+  <img src='" . BASE_URL . "/{$row['image']}' width='50' class='me-2'>
   <div class='flex-grow-1'>
     <h6>{$row['name']}</h6>
     <p>PKR {$row['price']} x {$row['qty']} = PKR {$subtotal}</p>
@@ -715,7 +741,7 @@ if (isset($_POST['remove_id'])) {
     <div class="carousel-inner">
       <?php foreach ($dataAll as $index => $row): ?>
         <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
-          <img src="<?php echo htmlspecialchars('image/' . $row['img']); ?>" class="d-block w-100"
+          <img src="<?php echo BASE_URL . '/image/' . htmlspecialchars($row['img']); ?>" class="d-block w-100"
             alt="<?php echo htmlspecialchars($row['alt_text']); ?>">
           <div class="carousel-caption d-none d-md-block">
             <p style="display: none;"><?php echo htmlspecialchars($row['alt_text']); ?></p>
@@ -746,7 +772,7 @@ if (isset($_POST['remove_id'])) {
         echo "
         <div class='category-item'>
           <a href='#cart{$fcat['id']}'>
-            <img src='image/{$fcat['img']}' alt='{$fcat['name']}'>
+            <img src='" . BASE_URL . "/image/{$fcat['img']}' alt='{$fcat['name']}'>
             <span>{$fcat['name']}</span>
           </a>
         </div>
@@ -778,7 +804,7 @@ if (isset($_POST['remove_id'])) {
         <div class="P-container">
           <?php foreach ($searchResults as $rows): ?>
             <div class="p-card">
-              <img src="<?php echo $rows['image']; ?>" alt=""
+              <img src="<?php echo BASE_URL . '/' . htmlspecialchars($rows['featured_image']); ?>" alt=""
                 style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
               <div class="card-body">
                 <h5 class="card-title"><span
@@ -790,7 +816,7 @@ if (isset($_POST['remove_id'])) {
                   <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
                   <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
                   <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
-                  <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
+                  <input type="hidden" name="image" value="<?php echo htmlspecialchars($rows['featured_image']); ?>">
                   <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
                 </form>
 
@@ -846,37 +872,46 @@ if (isset($_GET['price_filter'])) {
   $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
 
   while ($fcat = mysqli_fetch_assoc($cat)) {
-    echo "<div class='P-container' id='cart{$fcat['id']}'>";
+    echo "<h2 class='text-center mt-5'>".htmlspecialchars($fcat['name'])."</h2>";
+    echo "<div class='P-container justify-content-center' id='cart{$fcat['id']}'>";
     $sql = "SELECT * FROM products WHERE category_id = {$fcat['id']}"; // Base query
-      if(isset($order_clause) && $order_clause != ""){
-         $sql .= " ".$order_clause; // Append order clause if a filter is selected
-      }
+    if(isset($order_clause) && $order_clause != ""){
+       $sql .= " ".$order_clause; // Append order clause if a filter is selected
+    }
     $pro = mysqli_query($conn, $sql);
-    while ($rows = mysqli_fetch_assoc($pro)) { ?>
+    while ($rows = mysqli_fetch_assoc($pro)) {
+      // Skip this product if it's out of stock
+        if (isset($rows['stock_status']) && $rows['stock_status'] == 'out_of_stock') {
+          continue;
+      }
+    ?>
       <div class="p-card">
-        <img src="<?php echo $rows['image']; ?>" alt=""
+        <img src="<?php echo BASE_URL . '/' . htmlspecialchars($rows['featured_image']); ?>" alt=""
           style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
         <div class="card-body">
           <h5 class="card-title"><span
-              style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
+              style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo htmlspecialchars($rows['name']); ?></span>
           </h5>
-          <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
-          <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
+          <p style="color: gray; " class="card-text"><?php echo htmlspecialchars($rows['description']); ?></p>
+          <?php if (isset($rows['sale_price']) && $rows['sale_price'] > 0): ?>
+              <p style="color: red; font-weight: bold;" class="card-text">
+                  PKR <?php echo htmlspecialchars($rows['sale_price']); ?> 
+                  <del style="color: grey; font-weight: normal;">PKR <?php echo htmlspecialchars($rows['price']); ?></del>
+              </p>
+          <?php else: ?>
+              <p style="color: black;" class="card-text">PKR <?php echo isset($rows['price']) ? htmlspecialchars($rows['price']) : '0'; ?></p>
+          <?php endif; ?>
           <form method="post" action="index.php#openCart">
             <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
-            <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
-            <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
-            <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
+            <input type="hidden" name="name" value="<?php echo htmlspecialchars($rows['name']); ?>">
+            <input type="hidden" name="price" value="<?php echo (isset($rows['sale_price']) && $rows['sale_price'] > 0) ? htmlspecialchars($rows['sale_price']) : htmlspecialchars($rows['price']); ?>">
+            <input type="hidden" name="image" value="<?php echo htmlspecialchars($rows['featured_image']); ?>">
             <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
           </form>
-
         </div>
       </div>
-
-
     <?php }
     echo "</div>";
-
   } ?>
 
 

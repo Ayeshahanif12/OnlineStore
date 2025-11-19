@@ -5,31 +5,38 @@ include 'config.php';
 $category = mysqli_query($conn, "SELECT * FROM nav_categories ");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $email = $_POST['email'];
-  $password = $_POST['password'];
+  // Handle Login
+  if (isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-  // Use prepared statements to prevent SQL injection
-  $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email = ?");
-  mysqli_stmt_bind_param($stmt, "s", $email);
-  mysqli_stmt_execute($stmt);
-  $result = mysqli_stmt_get_result($stmt);
+    // Use prepared statements to prevent SQL injection
+    $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email = ?");
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-  if ($result && mysqli_num_rows($result) == 1) {
-    $user = mysqli_fetch_assoc($result);
+    if ($result && mysqli_num_rows($result) == 1) {
+      $user = mysqli_fetch_assoc($result);
 
-    // Verify the password
-    if (password_verify($password, $user['password'])) {
-      $_SESSION['user_id'] = $user['id'];
-      $_SESSION['username'] = $user['fname']; // Use 'fname' as there is no 'full_name'
-      $_SESSION['role'] = $user['role'];
-      if ($user['role'] == "admin") {
-        header("Location: " . BASE_URL . "/adminpanel/adminpage.php");
+      // Verify the password
+      if (password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['fname']; // Use 'fname' as there is no 'full_name'
+        $_SESSION['role'] = $user['role'];
+        if ($user['role'] == "admin") {
+          header("Location: " . BASE_URL . "/adminpanel/adminpage.php");
+          exit();
+        } else {
+          header("Location: index.php");
+          exit();
+        }
       } else {
-        header("Location: index.php");
+        echo "<script>alert('Invalid username or password');</script>";
       }
+    } else {
+      echo "<script>alert('Invalid username or password');</script>";
     }
-  } else {
-    echo "<script>alert('Invalid username or password');</script>";
   }
 }
 ?>
