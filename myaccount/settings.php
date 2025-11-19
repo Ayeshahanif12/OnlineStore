@@ -407,35 +407,19 @@ if (!isset($orderStatus)) {
     .msg-label {
       position: absolute; top: 5px; left: 15px; font-size: 12px; font-weight: bold; color: #ccc;
     }
-    .user-msg {
-      background: var(--accent-color);
+    #track-order-btn {
+      background: #000;
       color: #fff;
-      margin-left: auto;
-      border-bottom-right-radius: 4px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 15px;
+      transition: 0.3s;
     }
-    .user-msg .msg-label {
-      color: #e0e0e0;
-    }
-    .ai-msg {
-      background: var(--surface-color);
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-      margin-right: auto;
-      border-bottom-left-radius: 4px;
-    }
-    .ai-msg .msg-label {
-      color: #888;
-    }
-    #chat-controls { display: flex; gap: 8px; }
-    #user-input { flex: 1; }
-
-    /* --- Responsive --- */
-    @media (max-width: 768px) {
-      body { display: block; }
-      .sidebar { position: relative; width: 100%; height: auto; }
-      .content { margin-left: 0; padding: 20px; }
-      .section { padding: 20px; }
-    }
+    #track-order-btn:hover {
+      background: #333;
     }
   </style>
 </head>
@@ -513,64 +497,32 @@ if (!isset($orderStatus)) {
       <?php } ?>
     </div>
 
-    <!-- Shipping -->
+    <!-- Shipping/Order Tracking -->
     <div id="shipping" class="section <?php echo $activeSection === 'shipping' ? 'active' : ''; ?>">
       <h3>Track Your Order</h3>
-
-      <form action="" method="POST">
+      <form method="POST">
         <div class="form-group">
-          <label for="order_id">Order ID</label>
-          <input type="text" id="order_id" name="order_id" required>
+          <label for="order_id">Enter Your Order ID:</label>
+          <input type="text" name="order_id" id="order_id" required>
         </div>
-        <button type="submit" class="form-button" name="track-order-btn">Track Order</button>
+        <button type="submit" name="track-order-btn" class="form-button">Track Order</button>
       </form>
 
-      <?php if (isset($orderStatus) && !empty($orderStatus)) { ?>
+      <?php if (!empty($orderStatus)): ?>
         <div id="shipping-results">
           <h4>Order Status</h4>
-
-          <?php foreach ($orderStatus as $item) { ?>
+          <?php foreach ($orderStatus as $item): ?>
             <div class="shipping-item">
-              <?php if ($item['order_status'] === 'message') { ?>
-                <p style="font-weight:bold; color:red; margin:0;">
-                  <?= htmlspecialchars($item['text']) ?></p>
-              <?php } else { ?>
-                <p><strong>Product:</strong>
-                  <?= htmlspecialchars($item['product_name']) ?></p>
-                <p><strong>Status:</strong>
-                  <?php
-                  // 1. Colour define karein
-                  $status_color = 'blue'; // Default color
-                  if ($item['order_status'] == 'completed') {
-                    $status_color = 'green';
-                  } elseif ($item['order_status'] == 'processing') {
-                    $status_color = 'orange';
-                  } elseif ($item['order_status'] == 'cancelled') {
-                    $status_color = 'red';
-                  }
-                  ?>
-                  <span style="font-weight:bold; color:<?= $status_color ?>;">
-
-                    <?php
-                    // 2. Check karein ki ye 'message' hai ya actual status
-                    if ($item['order_status'] === 'message') {
-                      // Agar message hai, toh kuch display na karein kyunki message upar dikh chuka hai
-                      // Ya agar aapko sirf message hi dikhana hai toh isko yahan se hata dein
-                    } else {
-                      // Actual status ko display karein
-                      echo ucfirst($item['order_status']);
-                    }
-                    ?>
-                  </span>
-                </p>
-              <?php } ?>
-              </div>
-          <?php } ?>
-          </div>
-      <?php } ?>
+              <p><?php echo isset($item['text']) ? htmlspecialchars($item['text']) : '<strong>' . htmlspecialchars($item['product_name']) . ':</strong> ' . htmlspecialchars($item['order_status']); ?></p>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
     </div>
-    <!-- Privacy -->
-    <div id="privacy" class="section <?php echo $activeSection === 'privacy' ? 'active' : ''; ?>">
+
+
+    <!-- Privacy Policy -->
+    <div id="privacy" class="section">
       <h3>Privacy Policy</h3>
       <div class="policy-box">
         <h4>1. Information We Collect</h4>
