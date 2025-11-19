@@ -3,3 +3,7 @@
 *.env
 .env.*
 *.env.txt
+# Ignore environment files
+myaccount/.env.txt
+myaccount/.env.local
+myaccount/.env.development
