@@ -127,7 +127,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </span>
       </div>
 <button id="create" name="login" style="margin-left: 5px;" class="btn btn-dark">login</button><br>
+<<<<<<< HEAD
       <a href="<?php echo BASE_URL; ?>/myaccount/forget_password.php">Forgot Password</a>
+=======
+      <a href="http://localhost/clothing%20store/myaccount/forget_password.php">Forgot Password</a>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
       <a style="display: block;
         margin: 0 auto;
         width: fit-content;

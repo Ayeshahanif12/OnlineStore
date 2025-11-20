@@ -1,5 +1,6 @@
 <?php
 session_start();
+<<<<<<< HEAD
 include '../config.php';
 
 if ($_SESSION['role'] != "admin") {
@@ -7,16 +8,34 @@ if ($_SESSION['role'] != "admin") {
   exit();
 }
 
+=======
+if ($_SESSION['role'] != "admin") {
+  header("Location: http://localhost/clothing%20store/login.php");
+  exit();
+}
+
+$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+if (!$conn) {
+  die("Connection failed: " . mysqli_connect_error());
+}
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 
 if (isset($_POST['add_category'])) {
   $image = $_FILES['image']['name'];
   $alt_text = $_POST['category_name'];
+<<<<<<< HEAD
   $target = "../image/" . basename($image); // Corrected path to be relative to project root
 
   $stmt = mysqli_prepare($conn, "INSERT INTO carousel (img, alt_text) VALUES (?, ?)");
   mysqli_stmt_bind_param($stmt, "ss", $image, $alt_text);
 
   if (mysqli_stmt_execute($stmt)) {
+=======
+  $target = "image/" . basename($image);
+
+  $sql = "INSERT INTO carousel (img, alt_text) VALUES ('$image', '$alt_text')";
+  if (mysqli_query($conn, $sql)) {
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
       echo "<p>Image uploaded successfully.</p>";
     } else {
@@ -25,7 +44,10 @@ if (isset($_POST['add_category'])) {
   } else {
     echo "<p>Error: " . mysqli_error($conn) . "</p>";
   }
+<<<<<<< HEAD
   mysqli_stmt_close($stmt);
+=======
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 }
 ?>
 
@@ -244,7 +266,11 @@ if (isset($_POST['add_category'])) {
         </a>
       </li>
       <li>
+<<<<<<< HEAD
         <a href="<?php echo BASE_URL; ?>/adminpanel/category.php" class="nav-link">
+=======
+        <a href="http://localhost/clothing%20store/adminpanel/category.php" class="nav-link">
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
           <i class="bi bi-tags me-2"></i> Categories
         </a>
       </li>
@@ -273,7 +299,11 @@ if (isset($_POST['add_category'])) {
         <li>
           <hr class="dropdown-divider">
         </li>
+<<<<<<< HEAD
         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/logout.php">Sign out</a></li>
+=======
+        <li><a class="dropdown-item" href="http://localhost/clothing%20store/login.php">Sign out</a></li>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
       </ul>
     </div>
   </div>
@@ -306,6 +336,10 @@ if (isset($_POST['add_category'])) {
     echo "<p>No carousel found.</p>";
   }
 
+<<<<<<< HEAD
+=======
+  mysqli_close($conn);
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
   ?>
 
   <table border=1>

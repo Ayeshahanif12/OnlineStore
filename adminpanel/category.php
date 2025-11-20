@@ -1,5 +1,12 @@
 <?php
+<<<<<<< HEAD
 include '../config.php';
+=======
+$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+if (!$conn) {
+  die("Connection failed: " . mysqli_connect_error());
+}
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $cat_name = $_POST['category_name'];
@@ -7,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_FILES['image'])) {
     $image_name = $_FILES['image']['name'];
     $image_tmp = $_FILES['image']['tmp_name'];
+<<<<<<< HEAD
     $target_path = "image/" . $image_name;
 
     $stmt = mysqli_prepare($conn, "INSERT INTO nav_categories (name, img) VALUES (?, ?)");
@@ -19,6 +27,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo "Error: " . mysqli_error($conn);
     }
     mysqli_stmt_close($stmt);
+=======
+
+    $target_path = "image/" . $image_name;
+
+
+
+    $insert = "INSERT INTO nav_categories (name, img) 
+                       VALUES ('$cat_name', '$image_name')";
+
+    if (mysqli_query($conn, $insert)) {
+      echo "<script>alert('Category added successfully!');</script>";
+    } else {
+      echo "Error: " . $insert . "<br>" . mysqli_error($conn);
+    }
+
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
   }
 }
 ?>
@@ -235,7 +259,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </a>
       </li>
       <li>
+<<<<<<< HEAD
         <a href="<?php echo BASE_URL; ?>/adminpanel/category.php" class="nav-link active">
+=======
+        <a href="http://localhost/clothing%20store/adminpanel/category.php" class="nav-link">
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
           <i class="bi bi-tags me-2"></i> Categories
         </a>
       </li>
@@ -264,7 +292,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li>
           <hr class="dropdown-divider">
         </li>
+<<<<<<< HEAD
         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/logout.php">Sign out</a></li>
+=======
+        <li><a class="dropdown-item" href="http://localhost/clothing%20store/login.php">Sign out</a></li>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
       </ul>
     </div>
   </div>

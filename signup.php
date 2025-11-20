@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 session_start();
 include 'config.php';
 
@@ -70,6 +71,84 @@ if (isset($_POST['create'])) {
     }
   }
 }
+=======
+
+
+session_start();
+$conn = mysqli_connect("localhost", "root", "", "clothing_store");
+if (!$conn) {
+  die("Database connection failed: " . mysqli_connect_error());
+}
+
+// Load categories for navbar
+$category = mysqli_query($conn, "SELECT * FROM nav_categories");
+
+// -- HANDLE SIGNUP SUBMIT --
+$signup_errors = [];
+$signup_success = false;
+if (isset($_POST['create'])) {
+  // sanitize basic inputs
+  $Fname = trim($_POST['Fname'] ?? '');
+  $Lname = trim($_POST['Lname'] ?? '');
+  $email = trim($_POST['email'] ?? '');
+  $password = $_POST['password'] ?? '';
+
+  // basic validation
+  if ($Fname === '' || $Lname === '' || $email === '' || $password === '') {
+    $signup_errors[] = "All fields are required.";
+  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $signup_errors[] = "Invalid email address.";
+  } else {
+    // server-side password policy check (same 8 characteristics)
+    $pw_errors = [];
+    
+    if (strlen($password) > 128)
+      $pw_errors[] = "Password too long.";
+    if (!preg_match('/[a-z]/', $password))
+      $pw_errors[] = "Include a lowercase letter.";
+    if (!preg_match('/[A-Z]/', $password))
+      $pw_errors[] = "Include an uppercase letter.";
+    if (!preg_match('/\d/', $password))
+      $pw_errors[] = "Include a digit.";
+    if (!preg_match('/[!@#$%^&*()_\-+=\[\]{};:\'",.<>\/?\\\|`~]/', $password))
+      $pw_errors[] = "Include a special character.";
+    if (preg_match('/\s/', $password))
+      $pw_errors[] = "Password must not contain spaces.";
+    $common = ['password', '123456', 'qwerty', 'admin', 'letmein', 'welcome', 'abc123', 'password1'];
+    foreach ($common as $c) {
+      if (stripos($password, $c) !== false) {
+        $pw_errors[] = "Password is too common or predictable.";
+        break;
+      }
+    }
+
+    if (!empty($pw_errors)) {
+      $signup_errors = array_merge($signup_errors, $pw_errors);
+    } else {
+      // check duplicate email
+      $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+      $check->bind_param("s", $email);
+      $check->execute();
+      $check->store_result();
+      if ($check->num_rows > 0) {
+        $signup_errors[] = "Email already registered. Try logging in or use a different email.";
+      } else {
+        $check->close();
+        // hash password and insert
+       ;
+        $stmt = $conn->prepare("INSERT INTO users (fname, lname, email, password) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $Fname, $Lname, $email, $password);
+        if ($stmt->execute()) {
+          $signup_success = true;
+        } else {
+          $signup_errors[] = "Insert failed: " . $stmt->error;
+        }
+        $stmt->close();
+      }
+    }
+  }
+}
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -150,6 +229,7 @@ if (isset($_POST['create'])) {
     .alert-box {
       margin-bottom: 12px;
     }
+<<<<<<< HEAD
      .type {
       display: none;
       position: absolute;
@@ -162,6 +242,8 @@ if (isset($_POST['create'])) {
       z-index: 999;
       min-width: 200px;
     }
+=======
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
   </style>
 </head>
 
@@ -186,7 +268,11 @@ if (isset($_POST['create'])) {
         </li>
         <li><a class="links text-white" href="#policy">Policy</a></li>
         <li><a class="links text-white" href="#contactus">Contact us</a></li>
+<<<<<<< HEAD
         <li><a class="links text-white" href="<?php echo BASE_URL; ?>/myaccount/settings.php">Settings</a></li>
+=======
+        <li><a class="links text-white" href="http://localhost/clothing%20store/myaccount/settings.php">Settings</a></li>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
       </ul>
     </div>
   </div>
@@ -321,7 +407,20 @@ if (isset($_POST['create'])) {
   </div>
 
   <?php
+<<<<<<< HEAD
   if (isset($_POST['subscribe'])) { // CONNECTING NEWSLETTER WITH PHP
+=======
+  // CONNECTING NEWSLETTER WITH PHP
+  
+  // Connect to database
+  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
+
+  if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+  }
+
+  if (isset($_POST['subscribe'])) {
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
 
@@ -344,7 +443,14 @@ if (isset($_POST['create'])) {
 
       mysqli_stmt_close($stmt);
     }
+<<<<<<< HEAD
   } ?>
+=======
+  }
+
+  mysqli_close($conn);
+  ?>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 
 
   <div class="footer">

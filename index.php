@@ -332,6 +332,7 @@ if (isset($_POST['remove_id'])) {
 
 
       /* NAVBAR TITLE */
+<<<<<<< HEAD
       .nav h1{
         text-align: center;
         font-size: 46px;
@@ -346,6 +347,13 @@ if (isset($_POST['remove_id'])) {
         /* Soft glow */
         margin: 0 auto;
         margin-right: 216px;
+=======
+      nav h1 {
+        color: white;
+        font-size: 24px;
+        margin: 10px 20px;
+        display: inline-block;
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
       }
 
       /* Navbar icons ko align karna */
@@ -364,40 +372,57 @@ if (isset($_POST['remove_id'])) {
       }
     }
 
+<<<<<<< HEAD
     /* SEARCH BOX FIX */
+=======
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     .search-box {
       display: none;
       position: absolute;
       top: 70px;
+<<<<<<< HEAD
       /* Navbar ke neeche show hoga */
       right: 20px;
       /* Right side me (icons ke neeche) */
+=======
+      /* navbar ke neeche show karega */
+      right: 0;
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
       background: #fff;
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
       width: 300px;
       /* Width fix */
       z-index: 2000;
       /* Sabse upar */
+=======
+      min-width: 350px;
+      z-index: 1000;
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     }
 
     .search-box.active {
       display: block;
     }
 
+<<<<<<< HEAD
 
     .nav h1 {
       margin: 0;
       text-align: center;
     }
 
+=======
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     .badge {
       font-size: 12px;
       padding: 4px 7px;
       border: 2px solid #121212;
       /* black border so badge looks clean */
     }
+<<<<<<< HEAD
 
     .type {
       display: none;
@@ -495,6 +520,8 @@ if (isset($_POST['remove_id'])) {
     .filter-box select:focus {
       border-color: #555;
     }
+=======
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
   </style>
 </head>
 
@@ -533,6 +560,7 @@ if (isset($_POST['remove_id'])) {
     </div>
   </nav>
 
+<<<<<<< HEAD
   <nav class="navbar navbar-dark"
     style="background-color:#121212; height:70px; padding:0 20px; position: relative; z-index: 1050;">
     <h1 style="color:white;">Trendy Wear</h1>
@@ -666,6 +694,94 @@ if (isset($_POST['remove_id'])) {
   </form>
 </div>
 
+=======
+  <nav class="navbar navbar-dark" style="background-color:#121212; height:70px; padding:0 20px; position:relative;">
+    <h1 style="color:white; margin:0; text-align: center;">Trendy Wear</h1>
+
+    <div class="d-flex align-items-center ms-auto">
+
+      <!-- Search Wrapper -->
+      <div class="search-wrapper position-relative">
+        <!-- Search Icon -->
+        <i class="bi bi-search text-white fs-5" id="openSearch" style="cursor:pointer;"></i>
+
+        <!-- Search Box -->
+        <div class="search-box" id="searchBox" style="height: 50px;">
+          <form method="GET" action="index.php" class="d-flex w-100" style="height: 34px;">
+            <input style="height: 40px;" type="text" class="form-control" name="search"
+              placeholder="Search by ID or Name..."
+              value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <button type="button" class="btn btn-sm btn-dark ms-2" id="closeSearch">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Shipping Icon -->
+      <a href="order_status.php" class="ms-3 text-white">
+        <i class="fa fa-truck fs-5"></i>
+      </a>
+
+      <!-- Cart Icon -->
+      <button class="btn ms-3 position-relative" style="background:transparent; border:none;" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+
+        <!-- Cart Icon -->
+        <i class="fa fa-shopping-cart text-white fs-5"></i>
+
+        <!-- Badge -->
+        <?php
+        $cartCount = 0;
+        $result = mysqli_query($conn, "SELECT COUNT(*) AS totalItems FROM cart");
+        if ($result) {
+          $row = mysqli_fetch_assoc($result);
+          $cartCount = $row['totalItems'] ?? 0;
+        }
+        ?>
+
+        <?php if ($cartCount > 0): ?>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <?php echo $cartCount; ?>
+          </span>
+        <?php endif; ?>
+      </button>
+
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasRightLabel">My Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+
+          </button>
+        </div>
+        <div class="offcanvas-body" id="cartItems">
+
+
+
+          <?php
+
+          $result = mysqli_query($conn, "SELECT * FROM cart");
+          $total = 0;
+          if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+              $subtotal = $row['total'];
+              $total += $subtotal;
+              echo "
+<div class='cart-item d-flex align-items-center mb-3'>
+  <img src='{$row['image']}' width='50' class='me-2'>
+  <div class='flex-grow-1'>
+    <h6>{$row['name']}</h6>
+    <p>PKR {$row['price']} x {$row['qty']} = PKR {$subtotal}</p>
+  </div>
+  <form method='post' action='index.php#openCart'>
+    <input type='hidden' name='remove_id' value='{$row['product_id']}'>
+    <button type='submit' class='btn btn-sm btn-danger'>
+      <i class='fa fa-trash'></i>
+    </button>
+  </form>
+</div>
+
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     ";
             }
             echo "<hr><h5>Total: PKR $total</h5>";
@@ -675,11 +791,20 @@ if (isset($_POST['remove_id'])) {
           ?>
 
         </div>
+<<<<<<< HEAD
 
         <div style="text-align: center; margin: 20px;">
           <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
           <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
         </div>
+=======
+
+        <div style="text-align: center; margin: 20px;">
+          <a href="cart.php" class="btn btn-dark w-75 mb-2">View Cart</a>
+          <a href="checkout.php" class="btn btn-primary w-75">Checkout</a>
+        </div>
+
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 
 
 
@@ -741,7 +866,11 @@ if (isset($_POST['remove_id'])) {
     <div class="carousel-inner">
       <?php foreach ($dataAll as $index => $row): ?>
         <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+<<<<<<< HEAD
           <img src="<?php echo BASE_URL . '/image/' . htmlspecialchars($row['img']); ?>" class="d-block w-100"
+=======
+          <img src="<?php echo htmlspecialchars('image/' . $row['img']); ?>" class="d-block w-100"
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
             alt="<?php echo htmlspecialchars($row['alt_text']); ?>">
           <div class="carousel-caption d-none d-md-block">
             <p style="display: none;"><?php echo htmlspecialchars($row['alt_text']); ?></p>
@@ -762,6 +891,7 @@ if (isset($_POST['remove_id'])) {
   </div>
 
 
+<<<<<<< HEAD
 
 
   <div style="margin: 0px;" id="cat">
@@ -978,6 +1108,110 @@ if (isset($_GET['price_filter'])) {
     </section>
 
   </div>
+=======
+
+
+  <div style="margin: 0px;" id="cat">
+    <div class="categories" style="margin-top: 150px;">
+      <?php
+      $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
+      while ($fcat = mysqli_fetch_assoc($cat)) {
+        echo "
+        <div class='category-item'>
+          <a href='#cart{$fcat['id']}'>
+            <img src='image/{$fcat['img']}' alt='{$fcat['name']}'>
+            <span>{$fcat['name']}</span>
+          </a>
+        </div>
+      ";
+      }
+      ?>
+    </div>
+  </div>
+
+  <?php
+  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
+  $searchResults = [];
+
+  if (isset($_GET['search']) && $_GET['search'] !== "") {
+    $search = mysqli_real_escape_string($conn, $_GET['search']);
+    $sql = "SELECT * FROM products WHERE name LIKE '%$search%' OR id LIKE '%$search%'";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+      while ($row = mysqli_fetch_assoc($result)) {
+        $searchResults[] = $row;
+      }
+    }
+  }
+  ?>
+
+  <?php if (isset($_GET['search'])): ?>
+    <div style="margin:20px;">
+      <h3 style="color:#121212;">Search Results:</h3>
+      <?php if (count($searchResults) > 0): ?>
+        <div class="P-container">
+          <?php foreach ($searchResults as $rows): ?>
+            <div class="p-card">
+              <img src="<?php echo $rows['image']; ?>" alt=""
+                style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
+              <div class="card-body">
+                <h5 class="card-title"><span
+                    style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
+                </h5>
+                <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
+                <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
+                <form method="post" action="index.php#openCart">
+                  <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
+                  <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
+                  <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
+                  <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
+                  <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
+                </form>
+
+              </div>
+            </div>
+
+
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <p style="color:red;">No products found for "<?php echo htmlspecialchars($_GET['search']); ?>"</p>
+      <?php endif; ?>
+    </div>
+  <?php endif; ?>
+
+
+
+  <!-- PRODUCT CARD CONTAINER -->
+  <?php
+
+  $cat = mysqli_query($conn, "SELECT * FROM nav_categories");
+
+  while ($fcat = mysqli_fetch_assoc($cat)) {
+    echo "<div class='P-container' id='cart{$fcat['id']}'>";
+    $pro = mysqli_query($conn, "SELECT * FROM products WHERE category_id = {$fcat['id']}");
+    while ($rows = mysqli_fetch_assoc($pro)) { ?>
+      <div class="p-card">
+        <img src="<?php echo $rows['image']; ?>" alt=""
+          style="width: 60%; margin-left:30px; border-radius: 10px; height: auto;">
+        <div class="card-body">
+          <h5 class="card-title"><span
+              style="font-weight: bold; color:#121212; font-size: 18px; font-weight: 500; text-transform:capitalize;"><?php echo $rows['name']; ?></span>
+          </h5>
+          <p style="color: gray; " class="card-text"><?php echo $rows['description']; ?></p>
+          <p style="color: black;" class="card-text"> PKR <?php echo $rows['price']; ?></p>
+          <form method="post" action="index.php#openCart">
+            <input type="hidden" name="id" value="<?php echo $rows['id']; ?>">
+            <input type="hidden" name="name" value="<?php echo $rows['name']; ?>">
+            <input type="hidden" name="price" value="<?php echo $rows['price']; ?>">
+            <input type="hidden" name="image" value="<?php echo $rows['image']; ?>">
+            <button type="submit" name="add_to_cart" class="addToCart">Add to Cart</button>
+          </form>
+
+        </div>
+      </div>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 
   <!-- CONTACT US  -->
   <div id="contactus">
@@ -990,6 +1224,90 @@ if (isset($_GET['price_filter'])) {
             <input type="text" id="name" name="name" placeholder="Your Name" required />
           </div>
 
+<<<<<<< HEAD
+=======
+    <?php }
+    echo "</div>";
+
+  } ?>
+
+
+
+
+
+
+
+
+
+
+  <!-- POLICY DIV -->
+  <div id="policy">
+    <section class="privacy-policy">
+      <div class="policy-wrapper">
+        <h1 class="policy-title">Privacy Policy</h1>
+        <p class="policy-intro">
+          At <strong>Trendy Wear</strong>, we are committed to protecting your privacy and ensuring that your personal
+          information is handled in a safe and responsible manner.
+        </p>
+
+        <div class="policy-section">
+          <h2>1. Information We Collect</h2>
+          <p>We collect personal information including your name, email, shipping address, and payment details when
+            you
+            place an order or create an account with us.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. Use of Information</h2>
+          <p>Your information is used to process your orders, improve our services, and communicate updates or
+            promotional offers — only if you opt-in.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. Data Security</h2>
+          <p>All data is encrypted and stored securely. We implement strict measures to prevent unauthorized access,
+            misuse, or disclosure.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Cookies</h2>
+          <p>We use cookies to personalize your experience, analyze site traffic, and enhance website functionality.
+            You
+            can manage cookies in your browser settings.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>5. Third-Party Disclosure</h2>
+          <p>We do not sell or trade your personal information. It may be shared only with trusted partners who assist
+            us in delivering our services.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>6. Your Rights</h2>
+          <p>You may request access to, correction of, or deletion of your personal data at any time by contacting us.
+          </p>
+        </div>
+
+        <p class="policy-footer">
+          For any queries, please contact us at <a href="mailto:support@trendywear.com">support@trendywear.com</a>
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- CONTACT US  -->
+  <div id="contactus">
+    <section class="contact-section">
+      <div class="contact-wrapper">
+        <h2 class="contact-title">Contact Us</h2>
+        <form class="contact-form" method="post">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required />
+          </div>
+
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
           <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" placeholder="Your Email" required />
@@ -1008,6 +1326,7 @@ if (isset($_GET['price_filter'])) {
 
 
   <!-- CONNECTING CONTACT US WITH PHP -->
+<<<<<<< HEAD
   <?php if (isset($_POST['contact'])) {
     $name = htmlspecialchars(trim($_POST['name']));
     $email = htmlspecialchars(trim($_POST['email']));
@@ -1020,6 +1339,27 @@ if (isset($_GET['price_filter'])) {
       mysqli_stmt_bind_param($stmt, "sss", $name, $email, $message);
       $exe = mysqli_stmt_execute($stmt);
 
+=======
+  <?php
+  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
+
+  if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+  }
+
+  if (isset($_POST['contact'])) {
+    $name = htmlspecialchars(trim($_POST['name']));
+    $email = htmlspecialchars(trim($_POST['email']));
+    $message = htmlspecialchars(trim($_POST['message']));
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      echo "<script>alert('Invalid Email Address');</script>";
+    } else {
+      $stmt = mysqli_prepare($conn, "INSERT INTO contact_us (name, email, message) VALUES (?, ?, ?)");
+      mysqli_stmt_bind_param($stmt, "sss", $name, $email, $message);
+      $exe = mysqli_stmt_execute($stmt);
+
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
       if ($exe) {
         echo "<script>alert('Message sent successfully!');</script>";
       } else {
@@ -1030,6 +1370,10 @@ if (isset($_GET['price_filter'])) {
     }
   }
 
+<<<<<<< HEAD
+=======
+  mysqli_close($conn);
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
   ?>
 
 
@@ -1048,8 +1392,14 @@ if (isset($_GET['price_filter'])) {
       <h3>MY ACCOUNT</h3>
       <a href="login.php">LOGIN</a>
       <a href="signup.php">CREATE ACCOUNT</a>
+<<<<<<< HEAD
       <a href="<?php echo BASE_URL; ?>/myaccount/settings.php">SETTINGS</a>
       <a href="<?php echo BASE_URL; ?>/order_status.php">ORDER HISTORY</a>
+=======
+      <a href="signup.php">ACCOUNT INFO</a>
+      <a href="#">ORDER HISTORY</a>
+      <a href="#">ORDER HISTORY</a>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     </div>
 
     <div class="footercontainer">
@@ -1077,7 +1427,20 @@ if (isset($_GET['price_filter'])) {
   </div>
 
   <?php
+<<<<<<< HEAD
   // CONNECTING NEWSLETTER WITH PHP
+=======
+
+  // CONNECTING NEWSLETTER WITH PHP
+  
+  // Connect to database
+  $conn = mysqli_connect("localhost", "root", "", "clothing_store");
+
+  if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+  }
+
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
   if (isset($_POST['subscribe'])) {
     $email = $_POST['email'];
     $whatsapp = $_POST['whatsapp'];
@@ -1101,16 +1464,26 @@ if (isset($_GET['price_filter'])) {
 
       mysqli_stmt_close($stmt);
     }
+<<<<<<< HEAD
   } 
+=======
+  }
+
+  mysqli_close($conn);
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
   ?>
 
 
   <div class="footer">
     <p style="margin-top: 13px; font-size: 26px;">&#169; trendywear copyright 2024</p>
   </div>
+<<<<<<< HEAD
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+=======
+
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 </body>
 
 </html>
@@ -1123,6 +1496,7 @@ if (isset($_GET['price_filter'])) {
     }
   });
 
+<<<<<<< HEAD
   // Close the connection at the very end of the script
   <?php
     if (isset($conn)) {
@@ -1130,3 +1504,7 @@ if (isset($_GET['price_filter'])) {
     }
   ?>
 </script>
+=======
+</script>
+<script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)

@@ -617,7 +617,10 @@ span {
 }
 
 input {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     height: 60px;
     margin-bottom: 20px;
     border-radius: 0;
@@ -648,6 +651,7 @@ input::placeholder {
 
 #create:hover {
     background-color: #111;
+<<<<<<< HEAD
 }
 
 /* Search Box Fix */
@@ -690,4 +694,6 @@ input::placeholder {
     max-height: 300px;
     overflow-y: auto;
     border-radius: 0 0 8px 8px;
+=======
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 }

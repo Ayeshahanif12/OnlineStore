@@ -231,6 +231,7 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
         <li> <a class="links" href="index.php">Home</a></li>
         <li class="nav-item">
           <a class="links" href="index.php">Categories</a>
+<<<<<<< HEAD
           <ul class="type">
 
 
@@ -245,6 +246,12 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
         <li> <a class="links" href="index.php">Policy</a> </li>
         <li> <a class="links" href="index.php">Contact us</a> </li>
         <li> <a class="links" href="<?php echo BASE_URL;?>/myaccount/settings.php">Settings</a> </li>
+=======
+        </li>
+        <li> <a class="links" href="index.php">Policy</a> </li>
+        <li> <a class="links" href="index.php">Contact us</a> </li>
+        <li> <a class="links" href="http://localhost/clothing%20store/myaccount/settings.php">Settings</a> </li>
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
     </div>
   </div>
   </ul>
@@ -292,12 +299,18 @@ $checkouts = mysqli_query($conn, "SELECT * FROM checkout WHERE user_id='{$_SESSI
         while ($rows = mysqli_fetch_assoc($order_items)) {
           $status = strtolower($rows['order_status']);
           $statusClass = "status-pending";
+<<<<<<< HEAD
           if ($status === "processing")
             $statusClass = "status-processing";
           if ($status === "completed")
             $statusClass = "status-completed";
           if ($status === "cancelled")
             $statusClass = "status-cancelled";
+=======
+          if ($status === "processing") $statusClass = "status-processing";
+          if ($status === "completed") $statusClass = "status-completed";
+          if ($status === "cancelled") $statusClass = "status-cancelled";
+>>>>>>> 5ce6da0 (Add comprehensive styles for account settings, chat interface, and profile management)
 
           // grand total add karo
           $grand_total = $rows['total'];
